@@ -17,6 +17,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
 
     bytes32 public whitelistRoot;
     bool public publicSaleEnabled;
+    bool public mintEnabled;
 
     event MintSuccessful(address user, uint256 totalSupplyBeforeMint, uint256 _quantity);
 
@@ -40,6 +41,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     }
 
     function mint(uint256 _quantity, bytes32[] memory _proof) external payable {
+        require(mintEnabled, 'Minting is not enabled');
         require(balanceOf(msg.sender) < amountMintPerAccount, 'Each address may only mint x NFTs!');
         require(totalSupply() + _quantity <= max_supply, "Can't mint more than total supply");
         require(publicSaleEnabled || isValid(_proof, keccak256(abi.encodePacked(msg.sender))), 'You are not whitelisted');
@@ -102,6 +104,10 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         onlyAllowedOperator(from)
     {
         super.safeTransferFrom(from, to, tokenId, data);
+    }
+
+    function setMintEnabled(bool _state) public onlyOwner {
+        mintEnabled = _state;
     }
     
     function withdraw() external onlyOwner {
