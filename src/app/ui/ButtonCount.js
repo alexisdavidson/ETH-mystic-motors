@@ -21,7 +21,7 @@ export const ButtonCount = ({onCount, count}) => {
       <div
         className="cursor-pointer"
         onClick={() => {
-          onCount(true);
+          count != 8 && onCount(true);
         }}
       >
         
