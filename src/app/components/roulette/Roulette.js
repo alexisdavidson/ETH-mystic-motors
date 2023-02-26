@@ -5,7 +5,11 @@ import { RouletteItems } from "./RouletteItems";
 import { ButtonCount } from "../../ui/ButtonCount";
 import { Button } from "../../ui/Button";
 import { GenerateArray } from "../../utils/GenerateArray";
+import NFT from '../../contractsData/NFT.json'
+import NFTAddress from '../../contractsData/NFT-address.json'
+import whitelistAddresses from '../whitelistAddresses';
 import Web3 from 'web3';
+import { ethers } from 'ethers'
 
 import { Buffer } from "buffer/";
 window.Buffer = window.Buffer || Buffer;
@@ -15,843 +19,8 @@ const keccak256 = require('keccak256');
 
 const buf2hex = x => '0x' + x.toString('hex')
 
-const addresses = [
-  '0x62412757075f4BDe3349487266771e706645478E',
-  '0x1Ef783A063bbF0c62887E256bfEcC6dF93e14164',
-  '0xE72785921778Ec0004161BBDd5A160B1Ad5947F4',
-  '0x59806fddA0300CB31D5620C9cD49D4757C14f221',
-  '0x3243aD4099af28b77a3aB24c66d98D68AdeB6984',
-  '0xA9bd3F876E2153603bbc871dD566034774c370b5',
-  '0x7bBc228012689c5E1CC0D1175458B10fCA6cE063',
-  '0xc2eAdacB575BBdD4A434b8DB44477A678D60EE69',
-  '0x49af09BEB384739719Ab9a89F8C92A9c85dc84e3',
-  '0x3Bb63438736e7930B8148f73E402f1807f93e53d'
-  ]
-
-const leaves = addresses.map(x => keccak256(x));
-const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-const root = buf2hex(tree.getRoot());
-console.log(root)
-
-
-
-const address = "0x6e2Ebe8C137aa482907d2Ca576fc2EFFf110395A";
-const abi = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "approved",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "ApprovalForAll",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "quantity",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes32[]",
-				"name": "proof",
-				"type": "bytes32[]"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "leaf",
-				"type": "bytes32"
-			}
-		],
-		"name": "mintPresale",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "quantity",
-				"type": "uint256"
-			}
-		],
-		"name": "mintPublic",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "quantity",
-				"type": "uint256"
-			}
-		],
-		"name": "mintReserved",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "baseURI_",
-				"type": "string"
-			}
-		],
-		"name": "setBaseURI",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "contractState_",
-				"type": "uint256"
-			}
-		],
-		"name": "setContractState",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "maxSale",
-				"type": "uint256"
-			}
-		],
-		"name": "setMaxSale",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "merkleRoot_",
-				"type": "bytes32"
-			}
-		],
-		"name": "setMerkleRoot",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "saleAllowance",
-				"type": "uint256"
-			}
-		],
-		"name": "setSaleAllowance",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "newPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "setTokenPricePresale",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "newPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "setTokenPricePublic",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "accountBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "baseURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "contractState",
-		"outputs": [
-			{
-				"internalType": "enum MysticMotors.ContractState",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "getApproved",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "minter",
-				"type": "address"
-			}
-		],
-		"name": "getMintsPerAddress",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			}
-		],
-		"name": "isApprovedForAll",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "maxSalePlusOne",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "merkleRoot",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "mintsPerAddress",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "nextOwnerToExplicitlySet",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ownerOf",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "saleAllowancePlusOne",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes4",
-				"name": "interfaceId",
-				"type": "bytes4"
-			}
-		],
-		"name": "supportsInterface",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenByIndex",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenOfOwnerByIndex",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "tokenPricePresale",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "tokenPricePublic",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalSupply",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "root",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "leaf",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32[]",
-				"name": "proof",
-				"type": "bytes32[]"
-			}
-		],
-		"name": "verify",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	}
-];
-
-
+const fromWei = (num) => ethers.utils.formatEther(num)
+const toWei = (num) => ethers.utils.parseEther(num.toString())
 
 export const Roulette = () => {
   const [arr, setArr] = useState([]);
@@ -860,8 +29,90 @@ export const Roulette = () => {
   const [wallet, setWallet] = useState("");
   const [walletConnected, setWalletConnected] = useState(false);
   const [supply, setSupply] = useState("-");
+  const [balance, setBalance] = useState(0)
+  const [nft, setNFT] = useState({})
+  const [account, setAccount] = useState(null)
+  const [price, setPrice] = useState(0)
   const ref = useRef(null);
   
+  const [isWhitelisted, setIsWhitelisted] = useState(false)
+  const [proof, setProof] = useState([])
+
+  useEffect(() => {
+    loadContracts()
+  }, [])
+  
+  const loadContracts = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+
+    const nft = new ethers.Contract(NFTAddress.address, NFT.abi, signer)
+    setNFT(nft)
+    const priceToSet = fromWei(await nft.price())
+    setPrice(priceToSet)
+    // setLoading(false)
+  }
+
+  const getIsWhitelisted = async(acc, nft) => {
+    console.log("getIsWhitelisted")
+    
+    const isPublicSale = await nft.publicSaleEnabled()
+    if (isPublicSale) {
+      console.log("public sale is enabled")
+      setIsWhitelisted(true)
+      return
+    }
+
+    console.log("whitelistAddresses:")
+    console.log(whitelistAddresses)
+    
+    const accHashed = keccak256(acc)
+    const leafNodes = whitelistAddresses.map(addr => keccak256(addr));
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true});
+    const hexProof = merkleTree.getHexProof(accHashed);
+
+    console.log("hexProof: ")
+    console.log(hexProof);
+    console.log("keccak256(acc): ")
+    console.log(keccak256(acc))
+    const isValid = await nft.isValid(hexProof, accHashed);
+    console.log("isValid: " + isValid)
+
+    setIsWhitelisted(isValid)
+    setProof(hexProof)
+  }
+
+  const web3Handler = async () => {
+    // if (window.ethereum) {
+    //   window.web3 = new Web3(window.ethereum);
+      
+    // }
+    // else if (window.web3) {
+    //   window.web3 = new Web3(window.web3.currentProvider);
+    // }
+    // else {
+    //   window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    // }
+	console.log("web3Handler")
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+	console.log("account", accounts)
+    await getIsWhitelisted(accounts[0], nft)
+    setBalance(await nft.balanceOf(accounts[0]))
+    setAccount(accounts[0])
+	setWalletConnected(true);
+  }
+
+  const mintButton = async () => {
+	// Connect
+	if (account == null) {
+		await web3Handler();
+		return;
+	}
+
+	console.log("triggerMint", count, price);
+	await nft.mint(count, proof, { value: toWei(price * count) })
+}
+
   window.ethereum?.on('accountsChanged', accounts => {
     console.log(accounts[0]);
     if (!accounts[0]) {
@@ -898,121 +149,121 @@ export const Roulette = () => {
   }
 
   const loadData = async () => {
-    const contract = new window.web3.eth.Contract(abi, address);
+    const contract = new window.web3.eth.Contract(NFT.abi, NFTAddress.address);
     console.log(contract);
     
     const newSupply = await contract.methods.totalSupply().call();
     setSupply(newSupply);
   }
 
-  const connectMetamask = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
+//   const connectMetamask = async () => {
+//     if (window.ethereum) {
+//       window.web3 = new Web3(window.ethereum);
       
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
+//     }
+//     else if (window.web3) {
+//       window.web3 = new Web3(window.web3.currentProvider);
+//     }
+//     else {
+//       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+//     }
 
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    const accounts = await window.web3.eth.getAccounts();
-    console.log(accounts);
-    setWallet(accounts[0]);
-    setWalletConnected(true);
+//     await window.ethereum.request({ method: "eth_requestAccounts" });
+//     const accounts = await window.web3.eth.getAccounts();
+//     console.log(accounts);
+//     setWallet(accounts[0]);
+//     setWalletConnected(true);
 
-    const networkId = await window.web3.eth.net.getId()
-    /*if (networkId != 1) {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
-      });
-    }*/
+//     const networkId = await window.web3.eth.net.getId()
+//     /*if (networkId != 1) {
+//       await window.ethereum.request({
+//         method: 'wallet_switchEthereumChain',
+//         params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+//       });
+//     }*/
 
-    await loadData();
+//     await loadData();
 
-  }
+//   }
 
-  const mint = async () => {
-    const contract = new window.web3.eth.Contract(abi, address);
-    console.log(contract); 
+//   const mint = async () => {
+//     const contract = new window.web3.eth.Contract(Nft.abi, NftAddress.address);
+//     console.log(contract); 
     
-    const contractState = await contract.methods.contractState().call();
+//     const contractState = await contract.methods.contractState().call();
 
-    if (contractState == 0) {
-      alert("Sale is not Open!");
-    }
-    else if (contractState == 1) {
-      const leaf = buf2hex(keccak256(wallet));
-      const proof = tree.getProof(leaf).map(x => buf2hex(x.data));
-      const whitelisted = tree.verify(proof, leaf, root);
+//     if (contractState == 0) {
+//       alert("Sale is not Open!");
+//     }
+//     else if (contractState == 1) {
+//       const leaf = buf2hex(keccak256(wallet));
+//       const proof = tree.getProof(leaf).map(x => buf2hex(x.data));
+//       const whitelisted = tree.verify(proof, leaf, root);
 
-      if (!whitelisted) {
-        alert("Wallet is not Whitelisted!");
-      }
-      else {
-        const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
-        console.log(tokenPrice * count)
-        const balance = parseInt(await window.web3.eth.getBalance(wallet));
-        console.log(balance)
-        const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
-        console.log(mintsPerAddress + count)
-        const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
-        console.log(saleAllowancePlusOne)
+//       if (!whitelisted) {
+//         alert("Wallet is not Whitelisted!");
+//       }
+//       else {
+//         const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
+//         console.log(tokenPrice * count)
+//         const balance = parseInt(await window.web3.eth.getBalance(wallet));
+//         console.log(balance)
+//         const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
+//         console.log(mintsPerAddress + count)
+//         const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
+//         console.log(saleAllowancePlusOne)
 
-        if (mintsPerAddress + count >= saleAllowancePlusOne) {
-          alert("Exceeds allowance!");
-          return
-        }
+//         if (mintsPerAddress + count >= saleAllowancePlusOne) {
+//           alert("Exceeds allowance!");
+//           return
+//         }
 
-        if (tokenPrice * count > balance) {
-          alert("Insufficient Funds to Mint this amount of Tokens!");
-          return
-        }
+//         if (tokenPrice * count > balance) {
+//           alert("Insufficient Funds to Mint this amount of Tokens!");
+//           return
+//         }
 
 
-        const gas = await contract.methods.mintPresale(count, proof, leaf).estimateGas({from: wallet, value: tokenPrice * count});
+//         const gas = await contract.methods.mintPresale(count, proof, leaf).estimateGas({from: wallet, value: tokenPrice * count});
 
-        const method = await contract.methods.mintPresale(count, proof, leaf).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
-          await loadData();
-          setSpins([count, count])
-          alert("You have Successfully Minted!");
-        });
-        console.log(method);
-      }
-    }
-    else {
-      const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
-        console.log(tokenPrice * count)
-        const balance = parseInt(await window.web3.eth.getBalance(wallet));
-        console.log(balance)
-        const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
-        console.log(mintsPerAddress + count)
-        const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
-        console.log(saleAllowancePlusOne)
+//         const method = await contract.methods.mintPresale(count, proof, leaf).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
+//           await loadData();
+//           setSpins([count, count])
+//           alert("You have Successfully Minted!");
+//         });
+//         console.log(method);
+//       }
+//     }
+//     else {
+//       const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
+//         console.log(tokenPrice * count)
+//         const balance = parseInt(await window.web3.eth.getBalance(wallet));
+//         console.log(balance)
+//         const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
+//         console.log(mintsPerAddress + count)
+//         const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
+//         console.log(saleAllowancePlusOne)
 
-        if (mintsPerAddress + count >= saleAllowancePlusOne) {
-          alert("Exceeds allowance!");
-          return
-        }
+//         if (mintsPerAddress + count >= saleAllowancePlusOne) {
+//           alert("Exceeds allowance!");
+//           return
+//         }
 
-        if (tokenPrice * count > balance) {
-          alert("Insufficient Funds to Mint this amount of Tokens!");
-          return
-        }
+//         if (tokenPrice * count > balance) {
+//           alert("Insufficient Funds to Mint this amount of Tokens!");
+//           return
+//         }
 
-        const gas = await contract.methods.mintPublic(count).estimateGas({from: wallet, value: tokenPrice * count});
+//         const gas = await contract.methods.mintPublic(count).estimateGas({from: wallet, value: tokenPrice * count});
 
-        const method = await contract.methods.mintPublic(count).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
-          await loadData();
-          setSpins([count, count])
-          alert("You have Successfully Minted!");
-        });
-        console.log(method)
-    }
-  }
+//         const method = await contract.methods.mintPublic(count).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
+//           await loadData();
+//           setSpins([count, count])
+//           alert("You have Successfully Minted!");
+//         });
+//         console.log(method)
+//     }
+//   }
 
   useLayoutEffect(() => {
     setArr(GenerateArray([...new Array(81)]));
@@ -1037,8 +288,8 @@ export const Roulette = () => {
 
       <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
         <ButtonCount onCount={countHandler} count={count}/>
-        {walletConnected && spins[0] === 0 && <Button handler={mint} text={"Mint"} />}
-        {!walletConnected && <Button handler={connectMetamask} text={"Connect Wallet"} />}
+        {walletConnected && spins[0] === 0 && <Button handler={mintButton} text={"Mint"} />}
+        {!walletConnected && <Button handler={web3Handler} text={"Connect Wallet"} />}
         {walletConnected && spins[0] > 0 && <Button handler={handler} text={"Spin (" + spins[0] + "/" + spins[1] +")"} />}
 
       </div>

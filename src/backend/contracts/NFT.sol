@@ -18,7 +18,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     bytes32 public whitelistRoot;
     bool public publicSaleEnabled;
 
-    event MintSuccessful(address user);
+    event MintSuccessful(address user, uint256 _quantity);
 
     constructor(
         address _ownerAddress, 
@@ -39,14 +39,15 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         }
     }
 
-    function mint(uint256 _quantity, bytes32[] memory _proof) external {
+    function mint(uint256 _quantity, bytes32[] memory _proof) external payable {
         require(balanceOf(msg.sender) < amountMintPerAccount, 'Each address may only mint x NFTs!');
         require(totalSupply() + _quantity <= max_supply, "Can't mint more than total supply");
         require(publicSaleEnabled || isValid(_proof, keccak256(abi.encodePacked(msg.sender))), 'You are not whitelisted');
+        require(msg.value >= price * _quantity, "Not enough ETH sent; check price!");
 
         _mint(msg.sender, _quantity);
         
-        emit MintSuccessful(msg.sender);
+        emit MintSuccessful(msg.sender, _quantity);
     }
 
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {

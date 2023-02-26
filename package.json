@@ -1,6 +1,7 @@
 {
   "name": "mystic-motors",
   "version": "0.1.0",
+  
   "private": true,
   "dependencies": {
     "@chainlink/contracts": "^0.5.1",
