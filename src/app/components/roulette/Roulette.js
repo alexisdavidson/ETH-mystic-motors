@@ -35,7 +35,7 @@ export const Roulette = ({mintEnabled}) => {
   const [supplyPercent, setSupplyPercent] = useState(0);
   const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
-  const [price, setPrice] = useState(0.2)
+  const [price, setPrice] = useState(0.02)
   const ref = useRef(null);
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
