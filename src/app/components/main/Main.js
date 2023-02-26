@@ -13,15 +13,7 @@ export const Main = () => {
         <div className="subtitle text-xl sm:text-base xs:text-base">
         Mystic Motors is a digital play-to-earn NFT based game that provides a virtual racing experience that results in rewards, rivalries and champions.
         </div>
-        <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
-          <div className="">350</div>
-          <div className=" opacity-50">/500 Minted</div>
-        </div>
-        <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
-          <div
-            className={`h-full blue-progress-bar bg-blue-500 w-[75%] absolute z-10 ${style.bord}`}
-          ></div>
-        </div>
+        
 
         <Roulette />
       </div>

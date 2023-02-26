@@ -10,8 +10,9 @@ import carMobile1 from "../images/carMobile1.png";
 import carMobile2 from "../images/carMobile2.png";
 import carMobile3 from "../images/carMobile3.png";
 
-export const GenerateArray = (arrs) => {
-  const item = [car1, car2, car3, car4, car5, car6, car7];
+export const GenerateArray = (arrs, tokenId) => {
+  const car8 = "https://bafybeiculcjgv335ginl3wv2fgxvsmf4s6ifie3nzdvmr32i3vwjcmdj4u.ipfs.nftstorage.link/" + tokenId + ".jpg"
+  const item = [car1, car2, car3, car4, car5, car6, car7, car8];
   const itemsMobile = [
     carMobile1,
     carMobile2,

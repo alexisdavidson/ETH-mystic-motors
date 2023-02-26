@@ -862,8 +862,6 @@ export const Roulette = () => {
   const [supply, setSupply] = useState("-");
   const ref = useRef(null);
   
-
-  
   window.ethereum?.on('accountsChanged', accounts => {
     console.log(accounts[0]);
     if (!accounts[0]) {
@@ -875,7 +873,8 @@ export const Roulette = () => {
   });
 
   const handler = async () => {
-      setArr(GenerateArray([...new Array(81)]));
+      console.log(supply - spins[0] + 1)
+      setArr(GenerateArray([...new Array(81)], supply - spins[0] + 1));
       ref.current.style = "transition: 0s, transform: translateX(0)";
       const scroll = ref.current.scrollWidth / 2 - ref.current.clientWidth / 2;
       setTimeout(() => {
@@ -981,6 +980,7 @@ export const Roulette = () => {
           setSpins([count, count])
           alert("You have Successfully Minted!");
         });
+        console.log(method);
       }
     }
     else {
@@ -1010,6 +1010,7 @@ export const Roulette = () => {
           setSpins([count, count])
           alert("You have Successfully Minted!");
         });
+        console.log(method)
     }
   }
 
@@ -1023,15 +1024,16 @@ export const Roulette = () => {
   return (
     <>    
     
-      <div className="flex text-white text-xl mt-[35px] justify-center">
-    <div>{supply}</div>
-    <div className="opacity-50">/500 NFT</div>
-  </div>
-  <div className="w-[500px] sm:w-[80%] h-[7px] bg-black relative mt-[15px]">
-    <div
-      className={`h-full bg-blue-500 w-[75%] absolute z-10 ${style.bord}`}
-    ></div>
-  </div>
+    <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
+          <div className="">{supply}</div>
+          <div className=" opacity-50">/500 Minted</div>
+        </div>
+        <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
+          <div
+            className={`h-full blue-progress-bar bg-blue-500 w-[75%] absolute z-10 ${style.bord}`}
+          ></div>
+        </div>
+        <br></br>
 
       <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
         <ButtonCount onCount={countHandler} count={count}/>
