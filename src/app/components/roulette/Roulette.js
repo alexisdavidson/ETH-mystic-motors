@@ -37,6 +37,7 @@ export const Roulette = ({mintEnabled}) => {
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.02)
   const ref = useRef(null);
+  const [isSoldOut, setIsSoldOut] = useState(false);
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [proof, setProof] = useState([])
@@ -66,7 +67,10 @@ export const Roulette = ({mintEnabled}) => {
     setNFT(nft)
     NftRef.current = nft
     updateContractData()
-    // setLoading(false)
+
+    const tempSupply = await nft.totalSupply()
+    if (tempSupply >= 500)
+      setIsSoldOut(true)
   }
 
   const loadOpenSeaData = async () => {
@@ -208,7 +212,7 @@ export const Roulette = ({mintEnabled}) => {
     <>    
     
     <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
-      <div className="">{supply}</div>
+      <div className="">{isSoldOut ? 500 : supply}</div>
       <div className=" opacity-50">/500 Minted</div>
     </div>
     <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
@@ -217,7 +221,7 @@ export const Roulette = ({mintEnabled}) => {
     </div>
     <br></br>
 
-      {!hideAll ? (
+      {!isSoldOut? (
         <>
 
         <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
@@ -235,8 +239,9 @@ export const Roulette = ({mintEnabled}) => {
         </div>
         </>
       ) : (
-        <>
-        </>
+        <div style={{fontSize: "3rem", fontWeight: "bold"}}>
+          SOLD OUT
+        </div>
       )}
       {/* <div
         className={`
