@@ -4,13 +4,14 @@ import { Header } from "./Header";
 import { Main } from "./main/Main";
 import {
   BrowserRouter,
+  HashRouter,
   Routes,
   Route
 } from "react-router-dom"
 
 export const App = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={
           <div className="flex flex-col min-h-screen">
@@ -27,6 +28,6 @@ export const App = () => {
           </div>
         } />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
