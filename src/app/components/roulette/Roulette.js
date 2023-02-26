@@ -10,6 +10,7 @@ import NFTAddress from '../../contractsData/NFT-address.json'
 import whitelistAddresses from '../whitelistAddresses';
 import Web3 from 'web3';
 import { ethers } from 'ethers'
+import configContract from "./configContract.json";
 
 import { Buffer } from "buffer/";
 window.Buffer = window.Buffer || Buffer;
@@ -22,6 +23,8 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
+const nameCollection = 'mystic-motors-4'
+
 export const Roulette = ({mintEnabled}) => {
   const [arr, setArr] = useState([]);
   const [count, setCount] = useState(1);
@@ -29,42 +32,65 @@ export const Roulette = ({mintEnabled}) => {
   const [wallet, setWallet] = useState("");
   const [walletConnected, setWalletConnected] = useState(false);
   const [supply, setSupply] = useState("-");
-  const [balance, setBalance] = useState(0)
-  const [nft, setNFT] = useState({})
+  const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState(0.2)
   const ref = useRef(null);
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [proof, setProof] = useState([])
 
+  const NftRef = useRef();
+  NftRef.current = nft;
+
   useEffect(() => {
     if (mintEnabled)
-      loadContracts()
+      loadOpenSeaData()
+    //   loadContracts()
   }, [])
   
   const loadContracts = async () => {
+    console.log("loadContracts")
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const signer = provider.getSigner()
 
     const nft = new ethers.Contract(NFTAddress.address, NFT.abi, signer)
     setNFT(nft)
-    const priceToSet = fromWei(await nft.price())
-    setPrice(priceToSet)
-    const nftSupply = parseInt(await nft.totalSupply())
-    setSupply(nftSupply)
-    const supplyPercent = (nftSupply * 100 / 500)
-
-    console.log("supplyPercent", supplyPercent)
-    var bar = document.getElementById('barId');
-    bar.classList.remove('w');
-    bar.classList.add('w-[' + supplyPercent + '%]');
-
+    NftRef.current = nft
+    updateContractData()
     // setLoading(false)
   }
 
+  const loadOpenSeaData = async () => {
+    let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
+    .then((res) => res.json())
+    .then((res) => {
+      return res.collection.stats
+    })
+    .catch((e) => {
+      console.error(e)
+      console.error('Could not talk to OpenSea')
+      return null
+    })
+
+    console.log(stats)
+    setSupply(stats.count)
+  }
+  const updateContractData = async () => {
+    const priceToSet = fromWei(await NftRef.current.price())
+    setPrice(priceToSet)
+    const nftSupply = parseInt(await NftRef.current.totalSupply())
+    setSupply(nftSupply)
+    const supplyPercent = (nftSupply * 100 / 500)
+
+    // console.log("supplyPercent", supplyPercent)
+    // var bar = document.getElementById('barId');
+    // bar.classList.remove('w');
+    // bar.classList.add('w-[' + supplyPercent + '%]');
+  }
+
   const getIsWhitelisted = async(acc, nft) => {
-    console.log("getIsWhitelisted")
+    console.log("getIsWhitelisted", nft)
     
     const isPublicSale = await nft.publicSaleEnabled()
     if (isPublicSale) {
@@ -90,26 +116,17 @@ export const Roulette = ({mintEnabled}) => {
 
     setIsWhitelisted(isValid)
     setProof(hexProof)
+    return hexProof
   }
 
   const web3Handler = async () => {
-    // if (window.ethereum) {
-    //   window.web3 = new Web3(window.ethereum);
-      
-    // }
-    // else if (window.web3) {
-    //   window.web3 = new Web3(window.web3.currentProvider);
-    // }
-    // else {
-    //   window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    // }
-	console.log("web3Handler")
+	  console.log("web3Handler")
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-	console.log("account", accounts)
-    await getIsWhitelisted(accounts[0], nft)
-    setBalance(await nft.balanceOf(accounts[0]))
+    await loadContracts()
+    await getIsWhitelisted(accounts[0], NftRef.current)
+	  console.log("account", accounts)
     setAccount(accounts[0])
-	setWalletConnected(true);
+	  setWalletConnected(true);
   }
 
   const mintButton = async () => {
@@ -119,19 +136,10 @@ export const Roulette = ({mintEnabled}) => {
 		return;
 	}
 
+
 	console.log("triggerMint", count, price);
 	await nft.mint(count, proof, { value: toWei(price * count) })
 }
-
-  window.ethereum?.on('accountsChanged', accounts => {
-    console.log(accounts[0]);
-    if (!accounts[0]) {
-      setWalletConnected(false);
-    }
-    else {
-      setWallet(accounts[0])
-    }
-  });
 
   const handler = async () => {
       console.log(supply - spins[0] + 1)
@@ -157,123 +165,6 @@ export const Roulette = ({mintEnabled}) => {
       setCount(count - 1);
     }
   }
-
-  const loadData = async () => {
-    const contract = new window.web3.eth.Contract(NFT.abi, NFTAddress.address);
-    console.log(contract);
-    
-    const newSupply = await contract.methods.totalSupply().call();
-    setSupply(newSupply);
-  }
-
-//   const connectMetamask = async () => {
-//     if (window.ethereum) {
-//       window.web3 = new Web3(window.ethereum);
-      
-//     }
-//     else if (window.web3) {
-//       window.web3 = new Web3(window.web3.currentProvider);
-//     }
-//     else {
-//       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-//     }
-
-//     await window.ethereum.request({ method: "eth_requestAccounts" });
-//     const accounts = await window.web3.eth.getAccounts();
-//     console.log(accounts);
-//     setWallet(accounts[0]);
-//     setWalletConnected(true);
-
-//     const networkId = await window.web3.eth.net.getId()
-//     /*if (networkId != 1) {
-//       await window.ethereum.request({
-//         method: 'wallet_switchEthereumChain',
-//         params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
-//       });
-//     }*/
-
-//     await loadData();
-
-//   }
-
-//   const mint = async () => {
-//     const contract = new window.web3.eth.Contract(Nft.abi, NftAddress.address);
-//     console.log(contract); 
-    
-//     const contractState = await contract.methods.contractState().call();
-
-//     if (contractState == 0) {
-//       alert("Sale is not Open!");
-//     }
-//     else if (contractState == 1) {
-//       const leaf = buf2hex(keccak256(wallet));
-//       const proof = tree.getProof(leaf).map(x => buf2hex(x.data));
-//       const whitelisted = tree.verify(proof, leaf, root);
-
-//       if (!whitelisted) {
-//         alert("Wallet is not Whitelisted!");
-//       }
-//       else {
-//         const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
-//         console.log(tokenPrice * count)
-//         const balance = parseInt(await window.web3.eth.getBalance(wallet));
-//         console.log(balance)
-//         const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
-//         console.log(mintsPerAddress + count)
-//         const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
-//         console.log(saleAllowancePlusOne)
-
-//         if (mintsPerAddress + count >= saleAllowancePlusOne) {
-//           alert("Exceeds allowance!");
-//           return
-//         }
-
-//         if (tokenPrice * count > balance) {
-//           alert("Insufficient Funds to Mint this amount of Tokens!");
-//           return
-//         }
-
-
-//         const gas = await contract.methods.mintPresale(count, proof, leaf).estimateGas({from: wallet, value: tokenPrice * count});
-
-//         const method = await contract.methods.mintPresale(count, proof, leaf).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
-//           await loadData();
-//           setSpins([count, count])
-//           alert("You have Successfully Minted!");
-//         });
-//         console.log(method);
-//       }
-//     }
-//     else {
-//       const tokenPrice = parseInt(await contract.methods.tokenPricePresale().call());
-//         console.log(tokenPrice * count)
-//         const balance = parseInt(await window.web3.eth.getBalance(wallet));
-//         console.log(balance)
-//         const mintsPerAddress = parseInt(await contract.methods.mintsPerAddress(wallet).call());
-//         console.log(mintsPerAddress + count)
-//         const saleAllowancePlusOne = parseInt(await contract.methods.saleAllowancePlusOne().call());
-//         console.log(saleAllowancePlusOne)
-
-//         if (mintsPerAddress + count >= saleAllowancePlusOne) {
-//           alert("Exceeds allowance!");
-//           return
-//         }
-
-//         if (tokenPrice * count > balance) {
-//           alert("Insufficient Funds to Mint this amount of Tokens!");
-//           return
-//         }
-
-//         const gas = await contract.methods.mintPublic(count).estimateGas({from: wallet, value: tokenPrice * count});
-
-//         const method = await contract.methods.mintPublic(count).send({from: wallet, value: tokenPrice * count, gas: gas}).on('receipt', async function(receipt) {
-//           await loadData();
-//           setSpins([count, count])
-//           alert("You have Successfully Minted!");
-//         });
-//         console.log(method)
-//     }
-//   }
 
   useLayoutEffect(() => {
     setArr(GenerateArray([...new Array(81)]));
