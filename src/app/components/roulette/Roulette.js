@@ -23,7 +23,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const nameCollection = 'mystic-motors-4'
+const nameCollection = 'mystic-motors-5'
 
 export const Roulette = ({mintEnabled}) => {
   const [arr, setArr] = useState([]);
@@ -71,7 +71,7 @@ export const Roulette = ({mintEnabled}) => {
 
   const loadOpenSeaData = async () => {
     console.log("loadOpenSeaData")
-    let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
+    let stats = await fetch(`${configContract.OPENSEA_API}/collection/${nameCollection}`)
     .then((res) => res.json())
     .then((res) => {
       return res.collection.stats
