@@ -18,7 +18,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     bytes32 public whitelistRoot;
     bool public publicSaleEnabled;
 
-    event MintSuccessful(address user, uint256 _quantity);
+    event MintSuccessful(address user, uint256 totalSupplyBeforeMint, uint256 _quantity);
 
     constructor(
         address _ownerAddress, 
@@ -47,7 +47,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
 
         _mint(msg.sender, _quantity);
         
-        emit MintSuccessful(msg.sender, _quantity);
+        emit MintSuccessful(msg.sender, totalSupply(), _quantity);
     }
 
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {

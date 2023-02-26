@@ -3,7 +3,7 @@ import { Roulette } from "../roulette/Roulette";
 import style from "./Main.module.css";
 import { Timer } from "./Timer"
 
-export const Main = () => {
+export const Main = ({mintEnabled}) => {
   return (
     <main className={`flex h-full flex-1 bg-black ${style.bg} relative`}>
       <div className="home-main-wrapper mt-[20px] flex flex-col justify-center items-center mx-auto text-white relative z-10 text-center sm:w-[95%]">
@@ -17,8 +17,8 @@ export const Main = () => {
         Mystic Motors is a digital play-to-earn NFT based game that provides a virtual racing experience that results in rewards, rivalries and champions.
         </div>
         
+          <Roulette mintEnabled={mintEnabled}/>
 
-        <Roulette />
       </div>
     </main>
   );

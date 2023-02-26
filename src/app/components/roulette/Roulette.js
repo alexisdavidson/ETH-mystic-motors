@@ -22,7 +22,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-export const Roulette = () => {
+export const Roulette = ({mintEnabled}) => {
   const [arr, setArr] = useState([]);
   const [count, setCount] = useState(1);
   const [spins, setSpins] = useState([0, 0]);
@@ -39,7 +39,8 @@ export const Roulette = () => {
   const [proof, setProof] = useState([])
 
   useEffect(() => {
-    // loadContracts()
+    if (mintEnabled)
+      loadContracts()
   }, [])
   
   const loadContracts = async () => {
@@ -50,14 +51,14 @@ export const Roulette = () => {
     setNFT(nft)
     const priceToSet = fromWei(await nft.price())
     setPrice(priceToSet)
-    // const nftSupply = parseInt(await nft.totalSupply())
-    // setSupply(nftSupply)
-    // const supplyPercent = (nftSupply * 100 / 500)
+    const nftSupply = parseInt(await nft.totalSupply())
+    setSupply(nftSupply)
+    const supplyPercent = (nftSupply * 100 / 500)
 
-    // console.log("supplyPercent", supplyPercent)
-    // var bar = document.getElementById('barId');
-    // bar.classList.remove('w');
-    // bar.classList.add('w-[' + supplyPercent + '%]');
+    console.log("supplyPercent", supplyPercent)
+    var bar = document.getElementById('barId');
+    bar.classList.remove('w');
+    bar.classList.add('w-[' + supplyPercent + '%]');
 
     // setLoading(false)
   }
@@ -281,7 +282,7 @@ export const Roulette = () => {
     });
   }, []);
 
-  const hideAll = true
+  const hideAll = !mintEnabled
 
   return (
     <>    
