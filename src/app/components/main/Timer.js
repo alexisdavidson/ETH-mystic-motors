@@ -68,10 +68,10 @@ export const Timer = () => {
   return (
     <>
     <div className="text-lg mb-1 time-title">Time Left Until {timeUntil}:</div>
-    {timerDone ? (
+    {timerDone || true ? (
       <>
       <div className="text-4xl mb-[10px] time">
-        0 <span className="colorgray">:</span> 0 <span className="colorgray">:</span> 0 <span className="colorgray">:</span> 0
+        00 <span className="colorgray">:</span> 00 <span className="colorgray">:</span> 00 <span className="colorgray">:</span> 00
       </div>
       </>
     ) : (
