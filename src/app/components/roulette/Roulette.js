@@ -50,6 +50,7 @@ export const Roulette = () => {
     setNFT(nft)
     const priceToSet = fromWei(await nft.price())
     setPrice(priceToSet)
+    setSupply(parseInt(await nft.totalSupply()))
     // setLoading(false)
   }
 
@@ -296,10 +297,10 @@ export const Roulette = () => {
       <div className="flex mt-[20px] items-center">
         <img src={info} alt="info" />
         <div className="ml-2 sm:text-xs price-text">
-          <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">(0.02 ETH)</span> 
+          <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">({price* count} ETH)</span> 
         </div>
       </div>
-      <div
+      {/* <div
         className={`
         w-[1300px]
          mb-[50px] 
@@ -414,7 +415,7 @@ export const Roulette = () => {
         <div className="w-full h-full overflow-hidden">
           <RouletteItems refs={ref} items={arr} />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
