@@ -14,6 +14,8 @@ export const Timer = () => {
     minutes: 0,
     seconds: 0,
   });
+  const [timerDone, setTimerDone] = useState(false)
+
   const [unix, setUnix] = useState(0);
   useEffect(() => {
     const dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours);
@@ -38,6 +40,10 @@ export const Timer = () => {
     hours = hours < 10 ? `0${hours}` : hours;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
     seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    if (unix < 0)
+      setTimerDone(true)
+    
     setDate({
       days,
       hours,
@@ -47,8 +53,14 @@ export const Timer = () => {
   }, [unix]);
 
   return (
-    <div className="text-4xl mb-[10px] time">
-      {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
-    </div>
+    <>
+    {timerDone ? (
+      <></>
+    ) : (
+      <div className="text-4xl mb-[10px] time">
+        {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
+      </div>
+    )}
+    </>
   );
 };
