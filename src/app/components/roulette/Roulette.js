@@ -32,6 +32,7 @@ export const Roulette = ({mintEnabled}) => {
   const [wallet, setWallet] = useState("");
   const [walletConnected, setWalletConnected] = useState(false);
   const [supply, setSupply] = useState("-");
+  const [supplyPercent, setSupplyPercent] = useState(0);
   const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.2)
@@ -80,19 +81,18 @@ export const Roulette = ({mintEnabled}) => {
     })
 
     console.log(stats)
-    setSupply(stats.count)
-  }
-  const updateContractData = async () => {
-    const priceToSet = fromWei(await NftRef.current.price())
-    setPrice(priceToSet)
-    const nftSupply = parseInt(await NftRef.current.totalSupply())
+    const nftSupply = stats.count
     setSupply(nftSupply)
-    const supplyPercent = (nftSupply * 100 / 500)
-
+    const supplyPercent = parseInt(nftSupply * 100 / 500)
+    setSupplyPercent(supplyPercent)
     // console.log("supplyPercent", supplyPercent)
     // var bar = document.getElementById('barId');
     // bar.classList.remove('w');
     // bar.classList.add('w-[' + supplyPercent + '%]');
+  }
+  const updateContractData = async () => {
+    const priceToSet = fromWei(await NftRef.current.price())
+    setPrice(priceToSet)
   }
 
   const getIsWhitelisted = async(acc, nft) => {
@@ -189,7 +189,7 @@ export const Roulette = ({mintEnabled}) => {
       <div className=" opacity-50">/500 Minted</div>
     </div>
     <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
-      <div id="barId" className="h-full blue-progress-bar bg-blue-500 absolute z-10"
+      <div id="barId" className="h-full blue-progress-bar bg-blue-500 absolute z-10" style={{width: `${supplyPercent}%`}}
       ></div>
     </div>
     <br></br>
