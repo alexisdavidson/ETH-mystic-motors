@@ -5,7 +5,8 @@ export const Timer = () => {
   const [deadline, setDeadline] = useState({
     year: 2023,
     month: 2,
-    day: 24,
+    day: 26,
+    hours: 16
   });
   const [date, setDate] = useState({
     days: 0,
@@ -15,7 +16,7 @@ export const Timer = () => {
   });
   const [unix, setUnix] = useState(0);
   useEffect(() => {
-    const dates = new Date(deadline.year, deadline.month - 1, deadline.day);
+    const dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours);
     setUnix(dates - new Date());
   }, []);
   useEffect(() => {
@@ -28,6 +29,7 @@ export const Timer = () => {
   }, []);
 
   useEffect(() => {
+    console.log(unix)
     let days = Math.floor(unix / 1000 / 60 / 60 / 24);
     let hours = Math.floor(unix / 1000 / 60 / 60) % 24;
     let minutes = Math.floor(unix / 1000 / 60) % 60;
@@ -45,8 +47,8 @@ export const Timer = () => {
   }, [unix]);
 
   return (
-    <div className="text-4xl mb-[45px]">
-      {date.days} : {date.hours} : {date.minutes} : {date.seconds}
+    <div className="text-4xl mb-[10px] time">
+      {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
     </div>
   );
 };
