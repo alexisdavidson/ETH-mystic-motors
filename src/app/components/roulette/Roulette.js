@@ -46,7 +46,12 @@ export const Roulette = ({mintEnabled}) => {
   useEffect(() => {
     if (mintEnabled)
       loadOpenSeaData()
-    //   loadContracts()
+    const interval = setInterval(() => {
+      loadOpenSeaData();
+    }, 10000);
+    return () => {
+      clearInterval(interval);
+    };
   }, [])
   
   const loadContracts = async () => {
@@ -62,6 +67,7 @@ export const Roulette = ({mintEnabled}) => {
   }
 
   const loadOpenSeaData = async () => {
+    console.log("loadOpenSeaData")
     let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
     .then((res) => res.json())
     .then((res) => {
