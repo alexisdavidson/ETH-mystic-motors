@@ -39,7 +39,7 @@ export const Roulette = () => {
   const [proof, setProof] = useState([])
 
   useEffect(() => {
-    loadContracts()
+    // loadContracts()
   }, [])
   
   const loadContracts = async () => {
@@ -50,7 +50,15 @@ export const Roulette = () => {
     setNFT(nft)
     const priceToSet = fromWei(await nft.price())
     setPrice(priceToSet)
-    setSupply(parseInt(await nft.totalSupply()))
+    // const nftSupply = parseInt(await nft.totalSupply())
+    // setSupply(nftSupply)
+    // const supplyPercent = (nftSupply * 100 / 500)
+
+    // console.log("supplyPercent", supplyPercent)
+    // var bar = document.getElementById('barId');
+    // bar.classList.remove('w');
+    // bar.classList.add('w-[' + supplyPercent + '%]');
+
     // setLoading(false)
   }
 
@@ -273,33 +281,42 @@ export const Roulette = () => {
     });
   }, []);
 
+  const hideAll = true
+
   return (
     <>    
     
     <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
-          <div className="">{supply}</div>
-          <div className=" opacity-50">/500 Minted</div>
-        </div>
-        <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
-          <div
-            className={`h-full blue-progress-bar bg-blue-500 w-[75%] absolute z-10 ${style.bord}`}
-          ></div>
-        </div>
-        <br></br>
+      <div className="">{supply}</div>
+      <div className=" opacity-50">/500 Minted</div>
+    </div>
+    <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
+      <div id="barId" className="h-full blue-progress-bar bg-blue-500 absolute z-10"
+      ></div>
+    </div>
+    <br></br>
 
-      <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
-        <ButtonCount onCount={countHandler} count={count}/>
-        {walletConnected && spins[0] === 0 && <Button handler={mintButton} text={"Mint"} />}
-        {!walletConnected && <Button handler={web3Handler} text={"Connect Wallet"} />}
-        {walletConnected && spins[0] > 0 && <Button handler={handler} text={"Spin (" + spins[0] + "/" + spins[1] +")"} />}
+      {!hideAll ? (
+        <>
 
-      </div>
-      <div className="flex mt-[20px] items-center">
-        <img src={info} alt="info" />
-        <div className="ml-2 sm:text-xs price-text">
-          <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">({price* count} ETH)</span> 
+        <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
+          <ButtonCount onCount={countHandler} count={count}/>
+          {walletConnected && spins[0] === 0 && <Button handler={mintButton} text={"Mint"} />}
+          {!walletConnected && <Button handler={web3Handler} text={"Connect Wallet"} />}
+          {walletConnected && spins[0] > 0 && <Button handler={handler} text={"Spin (" + spins[0] + "/" + spins[1] +")"} />}
+  
         </div>
-      </div>
+        <div className="flex mt-[20px] items-center">
+          <img src={info} alt="info" />
+          <div className="ml-2 sm:text-xs price-text">
+            <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">({price* count} ETH)</span> 
+          </div>
+        </div>
+        </>
+      ) : (
+        <>
+        </>
+      )}
       {/* <div
         className={`
         w-[1300px]

@@ -11,7 +11,7 @@ async function main() {
 
   const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24" // goerli
 
-  const whitelistRoot = "0xf8100184ca8ff23f36ea4c14fd01062c574a2177c2286133ed67a64276fd5503" // goerli
+  const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e" // goerli
   // const whitelistRoot = "0xe41dd57c0c99fa6016139f0ed8513ae95d9028fe9a9b84fe78e075075ff155bb" // mainnet
 
   const freeAirDropAddresses = ["0x944932B3551e6302c0e0b1291064d66ACA205f24"] // goerli
