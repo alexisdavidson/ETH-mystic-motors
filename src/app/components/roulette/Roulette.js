@@ -91,8 +91,8 @@ export const Roulette = ({mintEnabled}) => {
     // bar.classList.add('w-[' + supplyPercent + '%]');
   }
   const updateContractData = async () => {
-    const priceToSet = fromWei(await NftRef.current.price())
-    setPrice(priceToSet)
+    // const priceToSet = fromWei(await NftRef.current.price())
+    // setPrice(priceToSet)
   }
 
   const getIsWhitelisted = async(acc, nft) => {
