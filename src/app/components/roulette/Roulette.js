@@ -37,7 +37,7 @@ export const Roulette = ({mintEnabled}) => {
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.02)
   const ref = useRef(null);
-  const [isSoldOut, setIsSoldOut] = useState(false);
+  const [isSoldOut, setIsSoldOut] = useState(true);
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [proof, setProof] = useState([])
