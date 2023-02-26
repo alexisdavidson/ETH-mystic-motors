@@ -9,13 +9,33 @@ async function main() {
   
   const NFT = await ethers.getContractFactory("NFT");
 
-  const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24" // goerli
+  //Goerli
+  // const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
+  // const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e"
+  // const freeAirDropAddresses = ["0x944932B3551e6302c0e0b1291064d66ACA205f24"]
+  // const freeAirDropAddressesAmount = [24]
 
-  const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e" // goerli
-  // const whitelistRoot = "0xe41dd57c0c99fa6016139f0ed8513ae95d9028fe9a9b84fe78e075075ff155bb" // mainnet
-
-  const freeAirDropAddresses = ["0x944932B3551e6302c0e0b1291064d66ACA205f24"] // goerli
-  const freeAirDropAddressesAmount = [24] // goerli
+  //Mainnet
+  const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
+  const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e"
+  const freeAirDropAddresses = [
+    "0x91124b4446e99CaecC01E12c7c261d088571fE08",
+    "0xf854441935334F778502f89B96D60aa1B63faa14",
+    "0x91bec01563B98023B493020F7A1c34A2C2eA305E",
+    "0xAd02CfF24091D2E39026a06E4e7200a9C0183C5C",
+    "0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B",
+    "0xfdC87078E0d38C1fF22aF81B7294df2Bca441925",
+    "0x944932B3551e6302c0e0b1291064d66ACA205f24",
+  ]
+  const freeAirDropAddressesAmount = [
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    24,
+  ]
 
   const nft = await NFT.deploy(teamWallet, whitelistRoot, freeAirDropAddresses, freeAirDropAddressesAmount);
   console.log("NFT contract address", nft.address)
