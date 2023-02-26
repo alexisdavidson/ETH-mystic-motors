@@ -16,9 +16,11 @@ export const Timer = () => {
   });
   const [timerDone, setTimerDone] = useState(false)
 
+  const timezoneOffset = (new Date()).getTimezoneOffset() / 60; //Bkk: -7
+
   const [unix, setUnix] = useState(0);
   useEffect(() => {
-    const dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours);
+    const dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours - timezoneOffset);
     setUnix(dates - new Date());
   }, []);
   useEffect(() => {
@@ -43,7 +45,6 @@ export const Timer = () => {
 
     if (unix < 0)
       setTimerDone(true)
-    
     setDate({
       days,
       hours,
