@@ -23,7 +23,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const nameCollection = 'mystic-motors-5'
+const nameCollection = 'mysticmotorsnft'
 
 export const Roulette = ({mintEnabled}) => {
   const [arr, setArr] = useState([]);
