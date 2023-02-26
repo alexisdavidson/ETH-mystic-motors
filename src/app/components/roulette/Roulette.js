@@ -45,11 +45,13 @@ export const Roulette = ({mintEnabled}) => {
   NftRef.current = nft;
 
   useEffect(() => {
-    if (mintEnabled)
+    let interval = null
+    if (mintEnabled) {
       loadOpenSeaData()
-    const interval = setInterval(() => {
-      loadOpenSeaData();
-    }, 10000);
+      interval = setInterval(() => {
+        loadOpenSeaData();
+      }, 10000);
+    }
     return () => {
       clearInterval(interval);
     };

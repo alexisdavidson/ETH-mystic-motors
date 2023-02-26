@@ -10,13 +10,13 @@ async function main() {
   const NFT = await ethers.getContractFactory("NFT");
 
   //Goerli
-  // const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
+  // const ownerWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
   // const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e"
   // const freeAirDropAddresses = ["0x944932B3551e6302c0e0b1291064d66ACA205f24"]
   // const freeAirDropAddressesAmount = [24]
 
   //Mainnet
-  const teamWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
+  const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
   const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e"
   const freeAirDropAddresses = [
     "0x91124b4446e99CaecC01E12c7c261d088571fE08",
@@ -37,7 +37,7 @@ async function main() {
     24,
   ]
 
-  const nft = await NFT.deploy(teamWallet, whitelistRoot, freeAirDropAddresses, freeAirDropAddressesAmount);
+  const nft = await NFT.deploy(ownerWallet, whitelistRoot, freeAirDropAddresses, freeAirDropAddressesAmount);
   console.log("NFT contract address", nft.address)
   saveFrontendFiles(nft, "NFT");
 }
