@@ -48,7 +48,7 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.4",
     "@nomiclabs/buidler": "^1.4.8",
-    "erc721a": "^4.2.2",
+    "erc721a": "^4.2.3",
     "hardhat-gas-reporter": "^1.0.9"
   }
 }
