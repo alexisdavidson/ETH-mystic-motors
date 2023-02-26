@@ -1,0 +1,19 @@
+.top {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    position: absolute;
+    top: -23px;
+    transform: translateX(-7px);
+
+}
+.bottom {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    position: absolute;
+    bottom: -23px;
+    transform: translateX(-7px);
+}
