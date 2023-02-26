@@ -17,7 +17,7 @@ async function main() {
 
   //Mainnet
   const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
-  const whitelistRoot = "0xb6f78b422fa1dd9cb74002d1b872b1c24efaeb94c8577d3ee32254cb61de48d4"
+  const whitelistRoot = "0x9e2b6a3498bf1f81e176959d421944e195d016d0df2808cc1c1935f68dcc7440"
   const freeAirDropAddresses = [
     "0x91124b4446e99CaecC01E12c7c261d088571fE08",
     "0xf854441935334F778502f89B96D60aa1B63faa14",

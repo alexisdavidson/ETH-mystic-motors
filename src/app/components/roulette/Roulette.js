@@ -70,7 +70,7 @@ export const Roulette = ({mintEnabled}) => {
   }
 
   const loadOpenSeaData = async () => {
-    console.log("loadOpenSeaData")
+    // console.log("loadOpenSeaData")
     let stats = await fetch(`${configContract.OPENSEA_API}/collection/${nameCollection}`)
     .then((res) => res.json())
     .then((res) => {
@@ -82,7 +82,7 @@ export const Roulette = ({mintEnabled}) => {
       return null
     })
 
-    console.log(stats)
+    // console.log(stats)
     const nftSupply = stats.count
     setSupply(nftSupply)
     const supplyPercent = parseInt(nftSupply * 100 / 500)
@@ -137,6 +137,10 @@ export const Roulette = ({mintEnabled}) => {
 	  setWalletConnected(true);
   }
 
+  const callAlert = (title, msg) => {
+    alert(title + "\n" + msg)
+  }
+
   const mintButton = async () => {
 	// Connect
 	if (account == null) {
@@ -144,9 +148,26 @@ export const Roulette = ({mintEnabled}) => {
 		return;
 	}
 
-
 	console.log("triggerMint", count, price);
-	await nft.mint(count, proof, { value: toWei(price * count) })
+  try {
+    await(await nft.mint(count, proof, { value: toWei(price * count) })).wait()
+    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
+  }
+  catch (error) {
+    console.error("Custom error handling: " + error);
+    if (error.toString().includes("insufficient funds for intrinsic transaction"))
+      callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
+    else if (error.toString().includes("You are not whitelisted"))
+      callAlert("You are not whitelisted!", "You are unable to mint as your wallet is not whitelisted in our Genesis Collection Phase 1 Mint!")
+    else if (error.toString().includes("Each address may only mint x NFTs!"))
+      callAlert("Max limit of 8 NFTs per wallet!", "There is a max limit of 8 NFTs per wallet in our Genesis Collection Phase 1 Mint. Please reduce your quantity and try again!")
+    else if (error.toString().includes("Can't mint more than total supply"))
+      callAlert("", "No more supply!")
+    else if (error.toString().includes("Minting is not enabled"))
+      callAlert("", "Minting is not enabled")
+    // callAlert("", (error.toString()).split('reverted:')[1].split('"')[0])
+  };
+
 }
 
   const handler = async () => {
