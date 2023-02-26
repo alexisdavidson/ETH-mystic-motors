@@ -45,7 +45,7 @@ export const Timer = () => {
   }, []);
 
   useEffect(() => {
-    console.log(unix)
+    // console.log(unix)
     let days = Math.floor(unix / 1000 / 60 / 60 / 24);
     let hours = Math.floor(unix / 1000 / 60 / 60) % 24;
     let minutes = Math.floor(unix / 1000 / 60) % 60;
