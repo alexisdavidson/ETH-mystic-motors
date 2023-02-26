@@ -16,7 +16,7 @@ export const Footer = () => {
       </div>
 
       <div className="copy-right-text copy-right-text-desktop text-center text-white sm:text-sm xs:text-xs lg:my-3 lg:row-start-3 lg:row-end-4 lg:mt-9 xl:text-sm lg:text-base">
-        Copyright ©2023 NAME, All rights reserved.
+        Copyright ©2023 Mystic Motors, All rights reserved.
       </div>
       <div>
       <div className="social-icon flex lg:mt-[25px] justify-end items-center footer-icon-wrapper">
@@ -35,7 +35,7 @@ export const Footer = () => {
         />
       </div>
       <div className="copy-right-text-mobile copy-right-text text-center text-white sm:text-sm xs:text-xs lg:my-3 lg:row-start-3 lg:row-end-4 lg:mt-3 xl:text-sm lg:text-base">
-        Copyright ©2023 NAME, All rights reserved.
+        Copyright ©2023 Mystic Motors, All rights reserved.
       </div>
       </div>
       <div className="collection-text-mobile copy-right-text text-center ">
