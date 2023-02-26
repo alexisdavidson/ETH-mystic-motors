@@ -8,6 +8,12 @@ export const Timer = () => {
     day: 26,
     hours: 16
   });
+  const [deadlinePublic, setDeadlinePublic] = useState({
+    year: 2023,
+    month: 2,
+    day: 27,
+    hours: 4
+  });
   const [date, setDate] = useState({
     days: 0,
     hours: 0,
@@ -15,12 +21,18 @@ export const Timer = () => {
     seconds: 0,
   });
   const [timerDone, setTimerDone] = useState(false)
+  const [timeUntil, setTimeUntil] = useState("Mint")
 
   const timezoneOffset = (new Date()).getTimezoneOffset() / 60; //Bkk: -7
 
   const [unix, setUnix] = useState(0);
   useEffect(() => {
-    const dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours - timezoneOffset);
+    let dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours - timezoneOffset);
+    let unixTemp = dates - new Date()
+    if (unixTemp < 0) {
+      setTimeUntil("Public Mint")
+      dates = new Date(deadlinePublic.year, deadlinePublic.month - 1, deadlinePublic.day, deadlinePublic.hours - timezoneOffset);
+    }
     setUnix(dates - new Date());
   }, []);
   useEffect(() => {
@@ -58,9 +70,12 @@ export const Timer = () => {
     {timerDone ? (
       <></>
     ) : (
-      <div className="text-4xl mb-[10px] time">
-        {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
-      </div>
+      <>
+        <div className="text-lg mb-1 time-title">Time Left Until {timeUntil}:</div>
+        <div className="text-4xl mb-[10px] time">
+          {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
+        </div>
+      </>
     )}
     </>
   );
