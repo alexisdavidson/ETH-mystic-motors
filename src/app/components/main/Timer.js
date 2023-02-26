@@ -21,7 +21,7 @@ export const Timer = () => {
     seconds: 0,
   });
   const [timerDone, setTimerDone] = useState(false)
-  const [timeUntil, setTimeUntil] = useState("Mint")
+  const [timeUntil, setTimeUntil] = useState("Whitelist Mint")
 
   const timezoneOffset = (new Date()).getTimezoneOffset() / 60; //Bkk: -7
 
@@ -30,7 +30,7 @@ export const Timer = () => {
     let dates = new Date(deadline.year, deadline.month - 1, deadline.day, deadline.hours - timezoneOffset);
     let unixTemp = dates - new Date()
     if (unixTemp < 0) {
-      setTimeUntil("Public Mint")
+      setTimeUntil("Public Sale")
       dates = new Date(deadlinePublic.year, deadlinePublic.month - 1, deadlinePublic.day, deadlinePublic.hours - timezoneOffset);
     }
     setUnix(dates - new Date());
@@ -67,11 +67,15 @@ export const Timer = () => {
 
   return (
     <>
+    <div className="text-lg mb-1 time-title">Time Left Until {timeUntil}:</div>
     {timerDone ? (
-      <></>
+      <>
+      <div className="text-4xl mb-[10px] time">
+        0 <span className="colorgray">:</span> 0 <span className="colorgray">:</span> 0 <span className="colorgray">:</span> 0
+      </div>
+      </>
     ) : (
       <>
-        <div className="text-lg mb-1 time-title">Time Left Until {timeUntil}:</div>
         <div className="text-4xl mb-[10px] time">
           {date.days} <span className="colorgray">:</span> {date.hours} <span className="colorgray">:</span> {date.minutes} <span className="colorgray">:</span> {date.seconds}
         </div>
