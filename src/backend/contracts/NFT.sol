@@ -11,9 +11,9 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriPrefix = '';
     string public uriSuffix = '.json';
     uint256 public max_supply = 500;
-    uint256 public amountMintPerAccount = 8;
+    uint256 public amountMintPerAccount = 5;
 
-    uint256 public price = 0.02 ether;
+    uint256 public price = 0.025 ether;
 
     bytes32 public whitelistRoot;
     bool public publicSaleEnabled;

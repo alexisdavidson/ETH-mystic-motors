@@ -37,7 +37,7 @@ export const Roulette = ({mintEnabled}) => {
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.02)
   const ref = useRef(null);
-  const [isSoldOut, setIsSoldOut] = useState(true);
+  const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [proof, setProof] = useState([])
@@ -243,7 +243,7 @@ export const Roulette = ({mintEnabled}) => {
           SOLD OUT
         </div>
       )}
-      {/* <div
+      <div
         className={`
         w-[1300px]
          mb-[50px] 
@@ -358,7 +358,7 @@ export const Roulette = ({mintEnabled}) => {
         <div className="w-full h-full overflow-hidden">
           <RouletteItems refs={ref} items={arr} />
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
