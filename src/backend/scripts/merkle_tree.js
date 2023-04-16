@@ -1,10 +1,11 @@
 // https://medium.com/@ItsCuzzo/using-merkle-trees-for-nft-whitelists-523b58ada3f9
 
 // Add "type": "module",   to package.json before executing this script
+// node .\src\backend\scripts\merkle_tree.js
 
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
-import whitelistAddresses from '../../app/components/whitelistAddresses.js'
+import whitelistAddresses from '../../app/components/allowList.js'
 
 // 3. Create a new array of `leafNodes` by hashing all indexes of the `whitelistAddresses`
 // using `keccak256`. Then creates a Merkle Tree object using keccak256 as the algorithm.

@@ -12,7 +12,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriSuffix = '.json';
     string public baseUri = "ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/";
     string public contractUri = "todo";
-    string public unrevealedUri = '';
+    string public unrevealedUri = 'unrevealedUri';
     uint256 public max_supply = 4000;
     uint256 public amountMintPerAccount = 5;
     uint256 public amountMintPerAccountPrimeList = 10;

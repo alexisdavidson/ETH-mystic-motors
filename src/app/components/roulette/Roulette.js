@@ -7,7 +7,7 @@ import { Button } from "../../ui/Button";
 import { GenerateArray } from "../../utils/GenerateArray";
 import NFT from '../../contractsData/NFT.json'
 import NFTAddress from '../../contractsData/NFT-address.json'
-import whitelistAddresses from '../whitelistAddresses';
+import whitelistAddresses from '../allowList';
 import Web3 from 'web3';
 import { ethers } from 'ethers'
 import configContract from "./configContract.json";
