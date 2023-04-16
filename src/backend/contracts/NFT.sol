@@ -70,15 +70,15 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
             : '';
     }
 
-    function _baseURI() internal pure override returns (string memory) {
+    function _baseURI() internal view override returns (string memory) {
         return baseUri;
     }
     
-    function baseTokenURI() public pure returns (string memory) {
+    function baseTokenURI() public view returns (string memory) {
         return _baseURI();
     }
 
-    function contractURI() public pure returns (string memory) {
+    function contractURI() public view returns (string memory) {
         return contractUri;
     }
 
