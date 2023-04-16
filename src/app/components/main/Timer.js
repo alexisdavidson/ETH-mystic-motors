@@ -10,9 +10,9 @@ export const Timer = () => {
   });
   const [deadlinePublic, setDeadlinePublic] = useState({
     year: 2023,
-    month: 2,
-    day: 27,
-    hours: 4
+    month: 4,
+    day: 23,
+    hours: 17
   });
   const [date, setDate] = useState({
     days: 0,

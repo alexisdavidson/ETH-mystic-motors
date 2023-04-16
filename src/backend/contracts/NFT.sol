@@ -10,42 +10,47 @@ import {DefaultOperatorFilterer} from "./DefaultOperatorFilterer.sol";
 contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriPrefix = '';
     string public uriSuffix = '.json';
-    uint256 public max_supply = 500;
+    string public baseUri = "ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/";
+    string public contractUri = "todo";
+    string public unrevealedUri = '';
+    uint256 public max_supply = 4000;
     uint256 public amountMintPerAccount = 5;
-
+    uint256 public amountMintPerAccountPrimeList = 10;
     uint256 public price = 0.025 ether;
+    uint256 public pricePrimeList = 0.02375 ether;
 
-    bytes32 public whitelistRoot;
+    bytes32 public allowListRoot;
+    bytes32 public primeListRoot;
     bool public publicSaleEnabled;
     bool public mintEnabled;
+    bool public revealed;
 
     event MintSuccessful(address user, uint256 totalSupplyBeforeMint, uint256 _quantity);
 
     constructor(
         address _ownerAddress, 
-        bytes32 _whitelistRoot, 
-        address[] memory _minterAddresses,
-        uint256[] memory _tokenAmount
+        bytes32 _allowListRoot, 
+        bytes32 _primeListRoot
     ) ERC721A ("Mystic Motors", "MYSTIC") {
-        whitelistRoot = _whitelistRoot;
+        allowListRoot = _allowListRoot;
+        primeListRoot = _primeListRoot;
         _transferOwnership(_ownerAddress);
-        
-        uint256 _minterAddressesLength = _minterAddresses.length;
-        uint256 _tokenAmountLength = _tokenAmount.length;
-        require(_minterAddressesLength == _tokenAmountLength, "Minter Addresses and Token Amount arrays need to have the same size.");
-
-        for (uint256 i = 0; i < _minterAddressesLength;) {
-            _mint(_minterAddresses[i], _tokenAmount[i]);
-            unchecked { ++i; }
-        }
     }
 
     function mint(uint256 _quantity, bytes32[] memory _proof) external payable {
         require(mintEnabled, 'Minting is not enabled');
-        require(balanceOf(msg.sender) < amountMintPerAccount, 'Each address may only mint x NFTs!');
         require(totalSupply() + _quantity <= max_supply, "Can't mint more than total supply");
-        require(publicSaleEnabled || isValid(_proof, keccak256(abi.encodePacked(msg.sender))), 'You are not whitelisted');
-        require(msg.value >= price * _quantity, "Not enough ETH sent; check price!");
+
+        bool isAllowList = isValidAllowList(_proof, keccak256(abi.encodePacked(msg.sender)));
+        bool isPrimeList = isValidPrimeList(_proof, keccak256(abi.encodePacked(msg.sender)));
+        
+        require(publicSaleEnabled || isAllowList || isPrimeList, 'You are not whitelisted');
+
+        require(balanceOf(msg.sender) < amountMintPerAccount 
+            || (isPrimeList && balanceOf(msg.sender) < amountMintPerAccountPrimeList), 'Each address may only mint x NFTs!');
+        
+        require(msg.value >= price * _quantity
+            || (isPrimeList && msg.value >= pricePrimeList * _quantity), "Not enough ETH sent; check price!");
 
         _mint(msg.sender, _quantity);
         
@@ -55,6 +60,10 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
         require(_exists(_tokenId), 'ERC721Metadata: URI query for nonexistent token');
 
+        if (!revealed) {
+            return unrevealedUri;
+        }
+
         string memory currentBaseURI = _baseURI();
         return bytes(currentBaseURI).length > 0
             ? string(abi.encodePacked(currentBaseURI, Strings.toString(_tokenId), uriSuffix))
@@ -62,7 +71,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/";
+        return baseUri;
     }
     
     function baseTokenURI() public pure returns (string memory) {
@@ -70,7 +79,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     }
 
     function contractURI() public pure returns (string memory) {
-        return "ipfs://bafkreigr3t4hrqmmd67m5ih5ieio7fit4xm3ph5eopq4o23z3o5jmzisee/";
+        return contractUri;
     }
 
     function setAmountMintPerAccount(uint _amountMintPerAccount) public onlyOwner {
@@ -81,12 +90,20 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         publicSaleEnabled = _state;
     }
 
-    function setWhitelistRoot(bytes32 _whitelistRoot) public onlyOwner {
-        whitelistRoot = _whitelistRoot;
+    function setAllowListRoot(bytes32 _allowListRoot) public onlyOwner {
+        allowListRoot = _allowListRoot;
     }
 
-    function isValid(bytes32[] memory _proof, bytes32 _leaf) public view returns (bool) {
-        return MerkleProof.verify(_proof, whitelistRoot, _leaf);
+    function setPrimeListRoot(bytes32 _primeListRoot) public onlyOwner {
+        primeListRoot = _primeListRoot;
+    }
+
+    function isValidAllowList(bytes32[] memory _proof, bytes32 _leaf) public view returns (bool) {
+        return MerkleProof.verify(_proof, allowListRoot, _leaf);
+    }
+
+    function isValidPrimeList(bytes32[] memory _proof, bytes32 _leaf) public view returns (bool) {
+        return MerkleProof.verify(_proof, primeListRoot, _leaf);
     }
 
     function transferFrom(address from, address to, uint256 tokenId) public payable override onlyAllowedOperator(from) {
@@ -108,6 +125,26 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
 
     function setMintEnabled(bool _state) public onlyOwner {
         mintEnabled = _state;
+    }
+
+    function setRevealed(bool _state) public onlyOwner {
+        revealed = _state;
+    }
+
+    function setPrice(uint256 _price) public onlyOwner {
+        price = _price;
+    }
+
+    function setPricePrimeList(uint256 _price) public onlyOwner {
+        pricePrimeList = _price;
+    }
+
+    function setBaseUri(string memory _uri) public onlyOwner {
+        baseUri = _uri;
+    }
+
+    function setUnrevealedUri(string memory _uri) public onlyOwner {
+        unrevealedUri = _uri;
     }
     
     function withdraw() external onlyOwner {
