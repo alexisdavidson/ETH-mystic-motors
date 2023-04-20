@@ -11,9 +11,9 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriPrefix = '';
     string public uriSuffix = '.json';
     string public baseUri = "ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/";
-    string public contractUri = "todo";
+    // string public contractUri = "todo";
     string public unrevealedUri = 'unrevealedUri';
-    uint256 public max_supply = 4000;
+    uint256 public max_supply = 4_000;
     uint256 public amountMintPerAccount = 5;
     uint256 public amountMintPerAccountPrimeList = 10;
     uint256 public price = 0.025 ether;
@@ -31,7 +31,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         address _ownerAddress, 
         bytes32 _allowListRoot, 
         bytes32 _primeListRoot
-    ) ERC721A ("Mystic Motors", "MYSTIC") {
+    ) ERC721A ("Mystic Motors Olympus", "MYSTIC") {
         allowListRoot = _allowListRoot;
         primeListRoot = _primeListRoot;
         _transferOwnership(_ownerAddress);
@@ -78,9 +78,9 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         return _baseURI();
     }
 
-    function contractURI() public view returns (string memory) {
-        return contractUri;
-    }
+    // function contractURI() public view returns (string memory) {
+    //     return contractUri;
+    // }
 
     function setAmountMintPerAccount(uint _amountMintPerAccount) public onlyOwner {
         amountMintPerAccount = _amountMintPerAccount;
@@ -156,6 +156,10 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     }
     
     function _startTokenId() internal view override returns (uint256) {
-        return 1;
+        return 501;
+    }
+
+    function setMaxSupply(uint _max_supply) public onlyOwner {
+        max_supply = _max_supply;
     }
 }
