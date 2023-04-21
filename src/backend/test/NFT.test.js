@@ -19,7 +19,7 @@ describe("NFT", async function() {
     let price = 0.025
     let pricePrimeList = 0.02375
     let unrevealedUri = 'unrevealedUri'
-    let revealedUri = 'ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/'
+    let revealedUri = 'ipfs://bafybeifym76rkt4pthzoidrqbt4tdk3vtcmaeww27uyunu3m4d6lkwvf2u/'
     let teamWallet = ""
     let allowList = ['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'] // addr1, addr2
     let primeList = ['0x90F79bf6EB2c4f870365E785982E1f101E93b906', '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65'] // addr3, addr4
@@ -37,7 +37,7 @@ describe("NFT", async function() {
 
     describe("Deployment", function() {
         it("Should track name and symbol of the nft collection", async function() {
-            expect(await nft.name()).to.equal("Mystic Motors")
+            expect(await nft.name()).to.equal("Mystic Motors Olympus")
             expect(await nft.symbol()).to.equal("MYSTIC")
         })
     })
@@ -54,10 +54,10 @@ describe("NFT", async function() {
             await nft.connect(deployer).airdrop(addr1.address, 1);
             expect(await nft.balanceOf(addr1.address)).to.equal(1);
 
-            expect(await nft.tokenURI(1)).to.equal(unrevealedUri);
+            expect(await nft.tokenURI(501)).to.equal(unrevealedUri);
             await nft.connect(deployer).setRevealed(true);
             
-            expect(await nft.tokenURI(1)).to.equal(revealedUri + '1.json');
+            expect(await nft.tokenURI(501)).to.equal(revealedUri + '501.json');
         })
     })
 

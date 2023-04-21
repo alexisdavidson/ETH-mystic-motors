@@ -10,7 +10,7 @@ import {DefaultOperatorFilterer} from "./DefaultOperatorFilterer.sol";
 contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriPrefix = '';
     string public uriSuffix = '.json';
-    string public baseUri = "ipfs://bafybeiahekcekq7zqnft2wcbknbk6ysfms6dj57uskiltgbva4cfidemcq/";
+    string public baseUri = "ipfs://bafybeifym76rkt4pthzoidrqbt4tdk3vtcmaeww27uyunu3m4d6lkwvf2u/";
     // string public contractUri = "todo";
     string public unrevealedUri = 'unrevealedUri';
     uint256 public max_supply = 4_000;
