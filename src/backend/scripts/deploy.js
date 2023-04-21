@@ -10,36 +10,27 @@ async function main() {
   const NFT = await ethers.getContractFactory("NFT");
 
   //Goerli
-  // const ownerWallet = "0x944932B3551e6302c0e0b1291064d66ACA205f24"
-  // const whitelistRoot = "0x900f6d55f0c0a25f87a71bdfa24f79de172760bb9d48fdb71d762b9c0f526a7e"
-  // const freeAirDropAddresses = ["0x944932B3551e6302c0e0b1291064d66ACA205f24"]
-  // const freeAirDropAddressesAmount = [24]
+  const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
+  const allowListRoot = "0xf30a51f9ebda7cede979db22b84570d8d37b5c97ca9c9a464196d6b2ca5c8c77"
+  const primeListRoot = "0x17774ea8852ddfe8b6cf569e4317904b16f7931e56659161b102be2270a21ec8"
 
   //Mainnet
-  const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
-  const whitelistRoot = "0x9e2b6a3498bf1f81e176959d421944e195d016d0df2808cc1c1935f68dcc7440"
-  const freeAirDropAddresses = [
-    "0x91124b4446e99CaecC01E12c7c261d088571fE08",
-    "0xf854441935334F778502f89B96D60aa1B63faa14",
-    "0x91bec01563B98023B493020F7A1c34A2C2eA305E",
-    "0xAd02CfF24091D2E39026a06E4e7200a9C0183C5C",
-    "0x269b7Fb9F7Be8945E6d0fD5c132E86c79ab55D2B",
-    "0xfdC87078E0d38C1fF22aF81B7294df2Bca441925",
-    "0x944932B3551e6302c0e0b1291064d66ACA205f24",
-  ]
-  const freeAirDropAddressesAmount = [
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    24,
-  ]
-
-  const nft = await NFT.deploy(ownerWallet, whitelistRoot, freeAirDropAddresses, freeAirDropAddressesAmount);
+  // const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
+  // const allowListRoot = "0xf30a51f9ebda7cede979db22b84570d8d37b5c97ca9c9a464196d6b2ca5c8c77"
+  // const primeListRoot = "0x17774ea8852ddfe8b6cf569e4317904b16f7931e56659161b102be2270a21ec8"
+  
+  const nft = await NFT.deploy(deployer.address, allowListRoot, primeListRoot); // mainnet replace
   console.log("NFT contract address", nft.address)
   saveFrontendFiles(nft, "NFT");
+  
+  // GOERLI TEST FUNCTIONS TO COMMENT FOR MAINNET
+  await nft.setMintEnabled(true);
+  await nft.setPublicSaleEnabled(true);
+  await nft.mint(2, [], {value: toWei(0.025 * 5)})
+  await nft.setMintEnabled(false);
+  await nft.setPublicSaleEnabled(false);
+  await nft.transferOwnership(ownerWallet);
+  console.log("Test functions called", parseInt(await nft.balanceOf(deployer.address)))
 }
 
 function saveFrontendFiles(contract, name) {

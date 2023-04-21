@@ -5,7 +5,7 @@
 
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
-import whitelistAddresses from '../../app/components/allowList.js'
+import whitelistAddresses from '../../app/components/primeList.js'
 
 // 3. Create a new array of `leafNodes` by hashing all indexes of the `whitelistAddresses`
 // using `keccak256`. Then creates a Merkle Tree object using keccak256 as the algorithm.
@@ -35,7 +35,7 @@ let claimingAddress = leafNodes[0];
 // `getHexProof` returns the neighbour leaf and all parent nodes hashes that will
 // be required to derive the Merkle Trees root hash.
 const hexProof = merkleTree.getHexProof(claimingAddress);
-console.log(hexProof);
+// console.log(hexProof);
 
 // ✅ - ❌: Verify is claiming address is in the merkle tree or not.
 // This would be implemented in your Solidity Smart Contract

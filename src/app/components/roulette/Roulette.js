@@ -8,6 +8,8 @@ import { GenerateArray } from "../../utils/GenerateArray";
 import NFT from '../../contractsData/NFT.json'
 import NFTAddress from '../../contractsData/NFT-address.json'
 import whitelistAddresses from '../allowList';
+import allowList from '../allowList';
+import primeList from '../primeList';
 import Web3 from 'web3';
 import { ethers } from 'ethers'
 import configContract from "./configContract.json";
@@ -23,7 +25,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const nameCollection = 'mysticmotorsnft'
+const nameCollection = 'mystic-motors-olympus' // todo: change
 
 export const Roulette = ({mintEnabled}) => {
   const [arr, setArr] = useState([]);
@@ -35,12 +37,16 @@ export const Roulette = ({mintEnabled}) => {
   const [supplyPercent, setSupplyPercent] = useState(0);
   const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
-  const [price, setPrice] = useState(0.02)
+  const [price, setPrice] = useState(0.025)
+  const [pricePrimeList, setPricePrimeList] = useState(0.02375)
   const ref = useRef(null);
   const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
-  const [proof, setProof] = useState([])
+  const [isAllowList, setIsAllowList] = useState(false)
+  const [isPrimeList, setIsPrimeList] = useState(false)
+  const [allowListProof, setAllowListProof] = useState([])
+  const [primeListProof, setPrimeListProof] = useState([])
 
   const NftRef = useRef();
   NftRef.current = nft;
@@ -57,7 +63,15 @@ export const Roulette = ({mintEnabled}) => {
       clearInterval(interval);
     };
   }, [])
-  
+
+  const getMerkleProof = (whitelist, acc) => {
+    const accHashed = keccak256(acc.toString())
+    const leafNodes = whitelist.map(e => keccak256(e.toString()));
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true});
+    const hexProof = merkleTree.getHexProof(accHashed);
+
+    return hexProof
+}
   const loadContracts = async () => {
     console.log("loadContracts")
     const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -69,13 +83,13 @@ export const Roulette = ({mintEnabled}) => {
     updateContractData()
 
     const tempSupply = await nft.totalSupply()
-    if (tempSupply >= 500)
+    if (tempSupply >= 4000)
       setIsSoldOut(true)
   }
 
   const loadOpenSeaData = async () => {
-    // console.log("loadOpenSeaData")
-    let stats = await fetch(`${configContract.OPENSEA_API}/collection/${nameCollection}`)
+    console.log("loadOpenSeaData")
+    let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
     .then((res) => res.json())
     .then((res) => {
       return res.collection.stats
@@ -89,7 +103,7 @@ export const Roulette = ({mintEnabled}) => {
     // console.log(stats)
     const nftSupply = stats.count
     setSupply(nftSupply)
-    const supplyPercent = parseInt(nftSupply * 100 / 500)
+    const supplyPercent = parseInt(nftSupply * 100 / 4000)
     setSupplyPercent(supplyPercent)
     // console.log("supplyPercent", supplyPercent)
     // var bar = document.getElementById('barId');
@@ -101,7 +115,7 @@ export const Roulette = ({mintEnabled}) => {
     // setPrice(priceToSet)
   }
 
-  const getIsWhitelisted = async(acc, nft) => {
+  const updateIsWhitelisted = async(acc, nft) => {
     console.log("getIsWhitelisted", nft)
     
     const isPublicSale = await nft.publicSaleEnabled()
@@ -115,27 +129,28 @@ export const Roulette = ({mintEnabled}) => {
     console.log(whitelistAddresses)
     
     const accHashed = keccak256(acc)
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr));
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true});
-    const hexProof = merkleTree.getHexProof(accHashed);
-
-    console.log("hexProof: ")
-    console.log(hexProof);
+    const allowListProof = getMerkleProof(allowList, acc)
+    const primeListProof = getMerkleProof(primeList, acc)
+    
     console.log("keccak256(acc): ")
     console.log(keccak256(acc))
-    const isValid = await nft.isValid(hexProof, accHashed);
-    console.log("isValid: " + isValid)
+    const isValidAllowList = await nft.isValidAllowList(allowListProof, accHashed);
+    console.log("isValidAllowList: " + isValidAllowList)
+    const isValidPrimeList = await nft.isValidPrimeList(primeListProof, accHashed);
+    console.log("isValidPrimeList: " + isValidPrimeList)
 
-    setIsWhitelisted(isValid)
-    setProof(hexProof)
-    return hexProof
+    setIsWhitelisted(isValidAllowList || isValidPrimeList)
+    setIsAllowList(isValidAllowList)
+    setIsPrimeList(isValidPrimeList)
+    setAllowListProof(allowListProof)
+    setPrimeListProof(primeListProof)
   }
 
   const web3Handler = async () => {
 	  console.log("web3Handler")
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     await loadContracts()
-    await getIsWhitelisted(accounts[0], NftRef.current)
+    await updateIsWhitelisted(accounts[0], NftRef.current)
 	  console.log("account", accounts)
     setAccount(accounts[0])
 	  setWalletConnected(true);
@@ -154,7 +169,12 @@ export const Roulette = ({mintEnabled}) => {
 
 	console.log("triggerMint", count, price);
   try {
-    await(await nft.mint(count, proof, { value: toWei(price * count) })).wait()
+    if (isPrimeList)
+      await(await nft.mint(count, primeListProof, { value: toWei(pricePrimeList * count) })).wait()
+    else if (isAllowList)
+      await(await nft.mint(count, allowListProof, { value: toWei(price * count) })).wait()
+    else
+      await(await nft.mint(count, [], { value: toWei(price * count) })).wait()
     callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
   }
   catch (error) {
@@ -212,8 +232,8 @@ export const Roulette = ({mintEnabled}) => {
     <>    
     
     <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
-      <div className="">{isSoldOut ? 500 : supply}</div>
-      <div className=" opacity-50">/500 Minted</div>
+      <div className="">{isSoldOut ? 4000 : supply}</div>
+      <div className=" opacity-50">/4000 Minted</div>
     </div>
     <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
       <div id="barId" className="h-full blue-progress-bar bg-blue-500 absolute z-10" style={{width: `${supplyPercent}%`}}
