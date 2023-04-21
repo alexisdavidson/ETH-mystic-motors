@@ -38,7 +38,6 @@ export const Roulette = ({mintEnabled}) => {
   const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.025)
-  const [pricePrimeList, setPricePrimeList] = useState(0.02375)
   const ref = useRef(null);
   const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
@@ -139,6 +138,9 @@ export const Roulette = ({mintEnabled}) => {
     const isValidPrimeList = await nft.isValidPrimeList(primeListProof, accHashed);
     console.log("isValidPrimeList: " + isValidPrimeList)
 
+    if (isPrimeList)
+      setPrice(0.02375)
+
     setIsWhitelisted(isValidAllowList || isValidPrimeList)
     setIsAllowList(isValidAllowList)
     setIsPrimeList(isValidPrimeList)
@@ -170,7 +172,7 @@ export const Roulette = ({mintEnabled}) => {
 	console.log("triggerMint", count, price);
   try {
     if (isPrimeList)
-      await(await nft.mint(count, primeListProof, { value: toWei(pricePrimeList * count) })).wait()
+      await(await nft.mint(count, primeListProof, { value: toWei(price * count) })).wait()
     else if (isAllowList)
       await(await nft.mint(count, allowListProof, { value: toWei(price * count) })).wait()
     else
