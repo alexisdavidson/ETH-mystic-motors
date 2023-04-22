@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export const Timer = () => {
+export const Timer = ({isSoldOut}) => {
     //Here's where you can set the deadline 
   const [deadline, setDeadline] = useState({
     year: 2023,
@@ -69,7 +69,7 @@ export const Timer = () => {
     <>
     <div className="text-lg mb-1 time-title">Time Left Until {timeUntil}:</div>
     {/* {timerDone || true ? ( */}
-    {timerDone ? (
+    {timerDone || isSoldOut? (
       <>
       <div className="text-4xl mb-[10px] time">
         00 <span className="colorgray">:</span> 00 <span className="colorgray">:</span> 00 <span className="colorgray">:</span> 00

@@ -27,7 +27,7 @@ const toWei = (num) => ethers.utils.parseEther(num.toString())
 
 const nameCollection = 'mystic-motors-olympus-4' // todo: change
 
-export const Roulette = ({mintEnabled}) => {
+export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   const [arr, setArr] = useState([]);
   const [count, setCount] = useState(1);
   const [spins, setSpins] = useState([0, 0]);
@@ -40,7 +40,6 @@ export const Roulette = ({mintEnabled}) => {
   const [price, setPrice] = useState(0.025)
   const [maximumAmountPerWallet, setMaximumAmountPerWallet] = useState(5)
   const ref = useRef(null);
-  const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [isAllowList, setIsAllowList] = useState(false)
