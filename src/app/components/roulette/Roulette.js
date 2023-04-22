@@ -40,7 +40,7 @@ export const Roulette = ({mintEnabled}) => {
   const [price, setPrice] = useState(0.025)
   const [maximumAmountPerWallet, setMaximumAmountPerWallet] = useState(5)
   const ref = useRef(null);
-  const [isSoldOut, setIsSoldOut] = useState(true); // set to true when soldout
+  const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
   const [isWhitelisted, setIsWhitelisted] = useState(false)
   const [isAllowList, setIsAllowList] = useState(false)
