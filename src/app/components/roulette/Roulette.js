@@ -104,6 +104,8 @@ export const Roulette = ({mintEnabled}) => {
     setSupply(nftSupply)
     const supplyPercent = parseInt(nftSupply * 100 / 4000)
     setSupplyPercent(supplyPercent)
+    if (nftSupply >= 4000)
+      setIsSoldOut(true)
     // console.log("supplyPercent", supplyPercent)
     // var bar = document.getElementById('barId');
     // bar.classList.remove('w');
