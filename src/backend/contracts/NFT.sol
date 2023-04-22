@@ -46,8 +46,8 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
         
         require(publicSaleEnabled || isAllowList || isPrimeList, 'You are not whitelisted');
 
-        require(balanceOf(msg.sender) < amountMintPerAccount 
-            || (isPrimeList && balanceOf(msg.sender) < amountMintPerAccountPrimeList), 'Each address may only mint x NFTs!');
+        require(balanceOf(msg.sender) + _quantity <= amountMintPerAccount 
+            || (isPrimeList && balanceOf(msg.sender) + _quantity <= amountMintPerAccountPrimeList), 'Each address may only mint x NFTs!');
         
         require(msg.value >= price * _quantity
             || (isPrimeList && msg.value >= pricePrimeList * _quantity), "Not enough ETH sent; check price!");
