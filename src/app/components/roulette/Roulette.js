@@ -171,7 +171,7 @@ export const Roulette = ({mintEnabled}) => {
     alert(title + "\n" + msg)
   }
 
-  const handleError = (error) => {
+  const handleError = async (error) => {
     console.error("HandleError: " + error);
     if (error.toString().includes("insufficient funds for intrinsic transaction"))
       callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
@@ -201,10 +201,15 @@ export const Roulette = ({mintEnabled}) => {
     proofToUse = allowListProof
   
   try {
-    await(await nft.mint(count, proofToUse, { value: toWei(price * count) })).wait()
-    // callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
+    (await nft.mint(count, proofToUse, { value: toWei(price * count) }))
+    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
   }
-  catch (error) { handleError(error) };
+  catch (error) {
+    if (error instanceof Promise)
+      await error
+    handleError(error.message)
+  };
+
 }
 
   const handler = async () => {
