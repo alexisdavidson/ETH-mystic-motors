@@ -104,11 +104,13 @@ export const Roulette = ({mintEnabled}) => {
       return null
     })
 
-    // console.log(stats)
+    console.log(stats)
     const nftSupply = stats.totalSupply
-    setSupply(nftSupply)
-    const supplyPercent = parseInt(nftSupply * 100 / 4000)
-    setSupplyPercent(supplyPercent)
+    if (supply == "-" || supply > nftSupply) {
+      setSupply(nftSupply)
+      const supplyPercent = parseInt(nftSupply * 100 / 4000)
+      setSupplyPercent(supplyPercent)
+    }
     if (nftSupply >= 4000)
       setIsSoldOut(true)
     // console.log("supplyPercent", supplyPercent)
