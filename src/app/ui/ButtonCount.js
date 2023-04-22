@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const ButtonCount = ({onCount, count}) => {
+export const ButtonCount = ({onCount, count, maximumAmountPerWallet}) => {
   
   return (
     <div className="custom-btn custom-btn1 flex justify-around w-[195px] h-[55px] rounded-lg border-white items-center border-solid border-2 text-3xl">
@@ -21,7 +21,7 @@ export const ButtonCount = ({onCount, count}) => {
       <div
         className="cursor-pointer"
         onClick={() => {
-          count != 8 && onCount(true);
+          count != maximumAmountPerWallet && onCount(true);
         }}
       >
         

@@ -38,6 +38,7 @@ export const Roulette = ({mintEnabled}) => {
   const [nft, setNFT] = useState(null)
   const [account, setAccount] = useState(null)
   const [price, setPrice] = useState(0.025)
+  const [maximumAmountPerWallet, setMaximumAmountPerWallet] = useState(5)
   const ref = useRef(null);
   const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
   
@@ -82,8 +83,8 @@ export const Roulette = ({mintEnabled}) => {
     updateContractData()
 
     const tempSupply = await nft.totalSupply()
-    if (tempSupply >= 4000)
-      setIsSoldOut(true)
+    // if (tempSupply >= 4000)
+    //   setIsSoldOut(true)
   }
 
   const loadOpenSeaData = async () => {
@@ -149,8 +150,10 @@ export const Roulette = ({mintEnabled}) => {
     const isValidPrimeList = await nft.isValidPrimeList(primeListProof, accHashed);
     console.log("isValidPrimeList: " + isValidPrimeList)
 
-    if (isPrimeList)
+    if (isValidPrimeList) {
+      setMaximumAmountPerWallet(10)
       setPrice(0.02375)
+    }
 
     setIsWhitelisted(isValidAllowList || isValidPrimeList)
     setIsAllowList(isValidAllowList)
@@ -178,9 +181,9 @@ export const Roulette = ({mintEnabled}) => {
     if (error.toString().includes("insufficient funds for intrinsic transaction"))
       callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
     else if (error.toString().includes("You are not whitelisted"))
-      callAlert("You are not whitelisted!", "You are unable to mint as your wallet is not whitelisted in our Genesis Collection Phase 1 Mint!")
+      callAlert("You are not whitelisted!", "You are unable to mint as your wallet is not whitelisted in our Phase 2 Mint!")
     else if (error.toString().includes("Each address may only mint x NFTs!"))
-      callAlert("Max limit of 8 NFTs per wallet!", "There is a max limit of 8 NFTs per wallet in our Genesis Collection Phase 1 Mint. Please reduce your quantity and try again!")
+      callAlert("Max limit of 5 NFTs per wallet (10 for prime list)!", "There is a max limit NFTs per wallet in our Phase 2 Mint. Please reduce your quantity and try again!")
     else if (error.toString().includes("Can't mint more than total supply"))
       callAlert("", "No more supply!")
     else if (error.toString().includes("Minting is not enabled"))
@@ -265,7 +268,7 @@ export const Roulette = ({mintEnabled}) => {
         <>
 
         <div className="button-wrapper flex mt-[25px] w-[41%] xl:w-[50%] sm:w-[90%] justify-evenly xl:justify-between space-x-4">
-          <ButtonCount onCount={countHandler} count={count}/>
+          <ButtonCount onCount={countHandler} count={count} maximumAmountPerWallet={maximumAmountPerWallet} />
           {walletConnected && spins[0] === 0 && <Button handler={mintButton} text={"Mint"} />}
           {!walletConnected && <Button handler={web3Handler} text={"Connect Wallet"} />}
           {walletConnected && spins[0] > 0 && <Button handler={handler} text={"Spin (" + spins[0] + "/" + spins[1] +")"} />}
