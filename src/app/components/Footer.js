@@ -39,8 +39,8 @@ export const Footer = () => {
       </div>
       </div>
       <div className="collection-text-mobile copy-right-text text-center ">
-      <a href="#">GENESIS<br></br>
-COLLECTION</a>
+      <a href="#">PHASE 2<br></br>
+OLYMPUS COLLECTION</a>
       </div>
 
     </div>
