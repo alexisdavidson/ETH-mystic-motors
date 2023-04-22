@@ -18,7 +18,7 @@ describe("NFT", async function() {
     let deployer, addr1, addr2, addr3, addr4, addr5, nft
     let price = 0.025
     let pricePrimeList = 0.02375
-    let unrevealedUri = 'ipfs://bafybeih627p6pfyum6vzrdlzflifxitlf7vzrb4tmj4u7eilgpzxnt7eoi/'
+    let unrevealedUri = 'ipfs://bafybeiddotjz44ucjp6zlklko2olxb3cgnqa4df6b7ontusahtiee6mjly/'
     let revealedUri = ''
     let teamWallet = ""
     let allowList = ['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'] // addr1, addr2
