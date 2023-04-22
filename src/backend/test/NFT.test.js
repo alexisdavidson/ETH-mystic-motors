@@ -18,7 +18,7 @@ describe("NFT", async function() {
     let deployer, addr1, addr2, addr3, addr4, addr5, nft
     let price = 0.025
     let pricePrimeList = 0.02375
-    let unrevealedUri = 'ipfs://bafybeicexmxgrqbmgvk3pt4mi5447skga6xh424cidywgf7ic2j6ski2dy'
+    let unrevealedUri = 'ipfs://bafybeih627p6pfyum6vzrdlzflifxitlf7vzrb4tmj4u7eilgpzxnt7eoi/'
     let revealedUri = ''
     let teamWallet = ""
     let allowList = ['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'] // addr1, addr2
@@ -54,7 +54,7 @@ describe("NFT", async function() {
             await nft.connect(deployer).airdrop(addr1.address, 1);
             expect(await nft.balanceOf(addr1.address)).to.equal(1);
 
-            expect(await nft.tokenURI(501)).to.equal(unrevealedUri);
+            expect(await nft.tokenURI(501)).to.equal(unrevealedUri + '501.json');
             await nft.connect(deployer).setRevealed(true);
             
             if (revealedUri == '')

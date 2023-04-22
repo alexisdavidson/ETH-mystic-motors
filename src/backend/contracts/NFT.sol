@@ -12,7 +12,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     string public uriSuffix = '.json';
     string public baseUri = "";
     // string public contractUri = "todo";
-    string public unrevealedUri = 'ipfs://bafybeicexmxgrqbmgvk3pt4mi5447skga6xh424cidywgf7ic2j6ski2dy';
+    string public unrevealedUri = 'ipfs://bafybeih627p6pfyum6vzrdlzflifxitlf7vzrb4tmj4u7eilgpzxnt7eoi/';
     uint256 public max_supply = 4_000;
     uint256 public amountMintPerAccount = 5;
     uint256 public amountMintPerAccountPrimeList = 10;
@@ -60,11 +60,11 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
         require(_exists(_tokenId), 'ERC721Metadata: URI query for nonexistent token');
 
+        string memory currentBaseURI = _baseURI();
         if (!revealed) {
-            return unrevealedUri;
+            currentBaseURI = unrevealedUri;
         }
 
-        string memory currentBaseURI = _baseURI();
         return bytes(currentBaseURI).length > 0
             ? string(abi.encodePacked(currentBaseURI, Strings.toString(_tokenId), uriSuffix))
             : '';

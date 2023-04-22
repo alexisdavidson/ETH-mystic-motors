@@ -26,7 +26,7 @@ async function main() {
   // GOERLI TEST FUNCTIONS TO COMMENT FOR MAINNET
   await nft.setMintEnabled(true);
   await nft.setPublicSaleEnabled(true);
-  await nft.mint(2, [], {value: toWei(0.025 * 5)})
+  await nft.mint(2, [], {value: toWei(0.025 * 2)})
   await nft.setMintEnabled(false);
   await nft.setPublicSaleEnabled(false);
   await nft.transferOwnership(ownerWallet);
