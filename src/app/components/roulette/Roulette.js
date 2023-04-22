@@ -106,7 +106,7 @@ export const Roulette = ({mintEnabled}) => {
 
     console.log(stats)
     const nftSupply = stats.totalSupply
-    if (supply == "-" || supply > nftSupply) {
+    if (supply == "-" || nftSupply > supply) {
       setSupply(nftSupply)
       const supplyPercent = parseInt(nftSupply * 100 / 4000)
       setSupplyPercent(supplyPercent)
