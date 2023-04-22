@@ -202,7 +202,7 @@ export const Roulette = ({mintEnabled}) => {
   
   try {
     await(await nft.mint(count, proofToUse, { value: toWei(price * count) })).wait()
-    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
+    // callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
   }
   catch (error) { handleError(error) };
 }
