@@ -11,8 +11,8 @@ async function main() {
 
   //Goerli
   const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
-  const allowListRoot = "0xf30a51f9ebda7cede979db22b84570d8d37b5c97ca9c9a464196d6b2ca5c8c77"
-  const primeListRoot = "0x17774ea8852ddfe8b6cf569e4317904b16f7931e56659161b102be2270a21ec8"
+  const allowListRoot = "0x5e135ed4f1ce6c413acae977ea28fc514d89423f919b9f771ec6000bc1a2a898"
+  const primeListRoot = "0x562e5699f570a2be8a3aead89eae52d403994b0fb2006cca381952c18d4df318"
 
   //Mainnet
   // const ownerWallet = "0xc4728ce1fB0082BE064ec71fd86E0238C454E858"
