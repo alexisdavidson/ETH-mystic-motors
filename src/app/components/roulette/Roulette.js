@@ -89,14 +89,15 @@ export const Roulette = ({mintEnabled}) => {
   const loadOpenSeaData = async () => {
     console.log("loadOpenSeaData")
     //"https://eth-mainnet.g.alchemy.com"
-    let requestUrl = 'https://eth-goerli.g.alchemy.com/nft/v2/' + process.env.REACT_APP_ALCHEMY_KEY + '/getContractMetadata?contractAddress=' + NFTAddress.address
+    // let requestUrl = 'https://eth-goerli.g.alchemy.com/nft/v2/' + process.env.REACT_APP_ALCHEMY_KEY + '/getContractMetadata?contractAddress=' + NFTAddress.address
     
 
-    // let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
-    let stats = await fetch(requestUrl)
+    let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
+    // let stats = await fetch(requestUrl)
     .then((res) => res.json())
     .then((res) => {
-      return res.contractMetadata
+      // return res.contractMetadata
+      return res.collection.stats
     })
     .catch((e) => {
       console.error(e)
@@ -105,7 +106,8 @@ export const Roulette = ({mintEnabled}) => {
     })
 
     console.log(stats)
-    const nftSupply = stats.totalSupply
+    const nftSupply = stats.count
+    // const nftSupply = stats.totalSupply
     if (supply == "-" || nftSupply > supply) {
       setSupply(nftSupply)
       const supplyPercent = parseInt(nftSupply * 100 / 4000)

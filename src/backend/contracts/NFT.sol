@@ -152,6 +152,7 @@ contract NFT is Ownable, ERC721A, DefaultOperatorFilterer {
     }
 
     function airdrop(address _user, uint256 _quantity) external onlyOwner {
+        require(totalSupply() + _quantity <= max_supply, "Can't mint more than total supply");
         _mint(_user, _quantity);
     }
     
