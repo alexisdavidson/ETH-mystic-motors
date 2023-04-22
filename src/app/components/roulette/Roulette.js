@@ -180,13 +180,16 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
     if (error.toString().includes("insufficient funds for intrinsic transaction"))
       callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
     else if (error.toString().includes("You are not whitelisted"))
-      callAlert("You are not whitelisted!", "You are unable to mint as your wallet is not whitelisted in our Phase 2 Mint!")
-    else if (error.toString().includes("Each address may only mint x NFTs!"))
-      callAlert("Max limit of 5 NFTs per wallet (10 for prime list)!", "There is a max limit NFTs per wallet in our Phase 2 Mint. Please reduce your quantity and try again!")
+      callAlert("You are not Allowlisted!", "Apologies, but you are unable to mint as your wallet is not whitelisted in our Olympus Collection Mint! Perhaps try a different wallet?")
+    else if (error.toString().includes("Each address may only mint x NFTs!")) {
+      if (isPrimeList)
+        callAlert("Max NFT limit of 10 per wallet!", "There is a max limit of 10 NFTs per wallet for our Prime Listed members. Please reduce your quantity and try again!")
+      else callAlert("Max NFT limit of 5 per wallet!", "There is a max limit of 5 NFTs per wallet for our Allow Listed members. Please reduce your quantity and try again!")
+    }
     else if (error.toString().includes("Can't mint more than total supply"))
       callAlert("", "No more supply!")
     else if (error.toString().includes("Minting is not enabled"))
-      callAlert("", "Minting is not enabled")
+      callAlert("Hold on there Racer!", "The mint has not started yet, please check the countdown timer to confirm when you can complete this transaction!")
   }
 
   const mintButton = async () => {
@@ -206,7 +209,7 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   
   try {
     (await nft.mint(count, proofToUse, { value: toWei(price * count) }))
-    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
+    callAlert("You have successfully Minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
   }
   catch (error) {
     if (error instanceof Promise)
