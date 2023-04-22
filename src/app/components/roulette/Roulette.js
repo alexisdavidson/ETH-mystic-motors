@@ -274,7 +274,7 @@ export const Roulette = ({mintEnabled}) => {
         <div className="flex mt-[20px] items-center">
           <img src={info} alt="info" />
           <div className="ml-2 sm:text-xs price-text">
-            <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">({price* count} ETH)</span> 
+            <span className="colorgray">Mint price indicated in ETH</span> <span className="colorwhite">({Number(price* count).toFixed(4)} ETH)</span> 
           </div>
         </div>
         </>
