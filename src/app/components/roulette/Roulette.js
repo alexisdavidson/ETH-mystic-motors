@@ -164,25 +164,8 @@ export const Roulette = ({mintEnabled}) => {
     alert(title + "\n" + msg)
   }
 
-  const mintButton = async () => {
-	// Connect
-	if (account == null) {
-		await web3Handler();
-		return;
-	}
-
-	console.log("triggerMint", count, price);
-  try {
-    if (isPrimeList)
-      await(await nft.mint(count, primeListProof, { value: toWei(price * count) })).wait()
-    else if (isAllowList)
-      await(await nft.mint(count, allowListProof, { value: toWei(price * count) })).wait()
-    else
-      await(await nft.mint(count, [], { value: toWei(price * count) })).wait()
-    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
-  }
-  catch (error) {
-    console.error("Custom error handling: " + error);
+  const handleError = (error) => {
+    console.error("HandleError: " + error);
     if (error.toString().includes("insufficient funds for intrinsic transaction"))
       callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
     else if (error.toString().includes("You are not whitelisted"))
@@ -193,9 +176,28 @@ export const Roulette = ({mintEnabled}) => {
       callAlert("", "No more supply!")
     else if (error.toString().includes("Minting is not enabled"))
       callAlert("", "Minting is not enabled")
-    // callAlert("", (error.toString()).split('reverted:')[1].split('"')[0])
-  };
+  }
 
+  const mintButton = async () => {
+	// Connect
+	if (account == null) {
+		await web3Handler();
+		return;
+	}
+
+	console.log("triggerMint", count, price);
+
+  let proofToUse = []
+  if (isPrimeList)
+    proofToUse = primeListProof
+  else if (isAllowList)
+    proofToUse = allowListProof
+  
+  try {
+    await(await nft.mint(count, proofToUse, { value: toWei(price * count) })).wait()
+    callAlert("You have successfully minted!", "Congratulations you have successfully minted your NFT(s). Check OpenSea to view your minted NFT(s).")
+  }
+  catch (error) { handleError(error) };
 }
 
   const handler = async () => {
