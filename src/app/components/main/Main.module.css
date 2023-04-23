@@ -26,12 +26,6 @@
     top: 0;
     transform: skew(-35deg, 0deg)
 }
-@media(max-width: 767px){
-    .bg {
-        background-image: url('../../images/car-bg-mobile.png');
-    }
-}
-
 .backgroundVideo {
   object-fit: cover;
   width: 100%;
@@ -40,4 +34,16 @@
   top: 0;
   left: 0;
   z-index: 0;
+}
+@media(max-width: 767px){
+    .bg {
+        background-image: url('../../images/car-bg-mobile.png');
+    }
+}
+
+
+@media (max-aspect-ratio: 9/12) {
+    .backgroundVideo {
+        display: none;
+    }
 }
