@@ -26,6 +26,7 @@ const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
 const nameCollection = 'mystic-motors-olympus'
+const max_supply = 4000
 
 export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   const [arr, setArr] = useState([]);
@@ -82,7 +83,7 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
     updateContractData()
 
     const tempSupply = await nft.totalSupply()
-    // if (tempSupply >= 4000)
+    // if (tempSupply >= max_supply)
     //   setIsSoldOut(true)
   }
 
@@ -112,10 +113,10 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
       if (nftSupply == 1)
         nftSupply = 0
       setSupply(nftSupply)
-      const supplyPercent = parseInt(nftSupply * 100 / 4000)
+      const supplyPercent = parseInt(nftSupply * 100 / max_supply)
       setSupplyPercent(supplyPercent)
     }
-    if (nftSupply >= 4000)
+    if (nftSupply >= max_supply)
       setIsSoldOut(true)
     // console.log("supplyPercent", supplyPercent)
     // var bar = document.getElementById('barId');
@@ -260,8 +261,8 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
     <>    
     
     <div className="flex text-white text-xl mt-[35px] justify-center progress-bar-text">
-      <div className="">{isSoldOut ? 4000 : supply}</div>
-      <div className=" opacity-50">/4000 Minted</div>
+      <div className="">{isSoldOut ? max_supply : supply}</div>
+      <div className=" opacity-50">/{max_supply} Minted</div>
     </div>
     <div className="w-[878px] sm:w-[80%] h-[10px] gray-progress-bar bg-black relative mt-[15px]">
       <div id="barId" className="h-full blue-progress-bar bg-blue-500 absolute z-10" style={{width: `${supplyPercent}%`}}
