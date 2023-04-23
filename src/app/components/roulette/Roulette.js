@@ -179,7 +179,7 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
 
   const handleError = async (error) => {
     console.error("HandleError: " + error);
-    if (error.toString().includes("insufficient funds for intrinsic transaction"))
+    if (error.toString().includes("insufficient funds for"))
       callAlert("Not Enough Funds In Your Wallet!", "There are not enough funds in your wallet to complete this transaction. Please deposit more ETH to complete your purchase!")
     else if (error.toString().includes("You are not whitelisted"))
       callAlert("You are not Allowlisted!", "Apologies, but you are unable to mint as your wallet is not whitelisted in our Olympus Collection Mint! Perhaps try a different wallet?")
