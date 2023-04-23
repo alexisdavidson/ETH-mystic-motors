@@ -27,7 +27,7 @@ export const Footer = () => {
         />
         <SocialLink
           img={openseaIcon}
-          link="https://opensea.io/collection/mysticmotorsnft"
+          link="https://opensea.io/collection/mystic-motors-olympus"
         />
         <SocialLink
           img={twitterIcon}

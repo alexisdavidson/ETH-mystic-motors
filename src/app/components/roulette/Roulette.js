@@ -25,7 +25,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const nameCollection = 'mystic-motors-olympus-6' // todo: change
+const nameCollection = 'mystic-motors-olympus'
 
 export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   const [arr, setArr] = useState([]);
@@ -92,7 +92,7 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
     // let requestUrl = 'https://eth-goerli.g.alchemy.com/nft/v2/' + process.env.REACT_APP_ALCHEMY_KEY + '/getContractMetadata?contractAddress=' + NFTAddress.address
     
 
-    let stats = await fetch(`${configContract.OPENSEA_API_TESTNETS}/collection/${nameCollection}`)
+    let stats = await fetch(`${configContract.OPENSEA_API}/collection/${nameCollection}`)
     // let stats = await fetch(requestUrl)
     .then((res) => res.json())
     .then((res) => {
