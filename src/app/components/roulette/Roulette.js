@@ -25,7 +25,7 @@ const buf2hex = x => '0x' + x.toString('hex')
 const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
-const nameCollection = 'mystic-motors-olympus-5' // todo: change
+const nameCollection = 'mystic-motors-olympus-6' // todo: change
 
 export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   const [arr, setArr] = useState([]);
@@ -106,9 +106,11 @@ export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
     })
 
     console.log(stats)
-    const nftSupply = stats.count
+    let nftSupply = stats.count
     // const nftSupply = stats.totalSupply
     if (supply == "-" || nftSupply > supply) {
+      if (nftSupply == 1)
+        nftSupply = 0
       setSupply(nftSupply)
       const supplyPercent = parseInt(nftSupply * 100 / 4000)
       setSupplyPercent(supplyPercent)
