@@ -8,11 +8,12 @@ export const Main = ({mintEnabled}) => {
   const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
 
   return (
-    <main className={`flex h-full flex-1 bg-black ${style.bg} relative`}>
+    <main className={`flex h-full flex-1 bg-black relative`}>
       <video id="vid" loop muted autoPlay className={`${style.backgroundVideo}`}>
           <source src={"1.mp4"} type="video/mp4"/>
       </video>
-      <div className="home-main-wrapper mt-[20px] flex flex-col justify-center items-center mx-auto text-white relative z-10 text-center sm:w-[95%]">
+      <div className={`${style.bg}`}></div>
+      <div className="home-main-wrapper mt-[20px] flex flex-col justify-center items-center mx-auto text-white relative z-100 text-center sm:w-[95%]">
         {/* <div className="text-lg mb-1 time-title">Time Left Until Mint:</div> */}
         <Timer isSoldOut={isSoldOut} />
         {/* <div className="text-4xl mb-[10px] time">122 <span className="colorgray">:</span> 45 <span className="colorgray">:</span> 12 <span className="colorgray">:</span> 12</div> */}
