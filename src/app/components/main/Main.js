@@ -9,6 +9,9 @@ export const Main = ({mintEnabled}) => {
 
   return (
     <main className={`flex h-full flex-1 bg-black ${style.bg} relative`}>
+      <video id="vid" loop muted autoPlay className={`${style.backgroundVideo}`}>
+          <source src={"1.mp4"} type="video/mp4"/>
+      </video>
       <div className="home-main-wrapper mt-[20px] flex flex-col justify-center items-center mx-auto text-white relative z-10 text-center sm:w-[95%]">
         {/* <div className="text-lg mb-1 time-title">Time Left Until Mint:</div> */}
         <Timer isSoldOut={isSoldOut} />
