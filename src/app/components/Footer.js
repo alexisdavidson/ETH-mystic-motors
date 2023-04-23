@@ -8,17 +8,19 @@ import openseaIcon from "../images/OpenSea-gray.png";
 import instIcon from "../images/instIcon.png";
 import { FooterItem } from "../ui/FooterItem";
 import { SocialLink } from "../ui/SocialLink";
+import style from "./main/Main.module.css";
+
 export const Footer = () => {
   return (
-    <div className="footer-wrapperinner max-h-[95px] lg:max-h-full 2xl:px-6 px-12 bg-[#1C1C1C]  mt-auto relative z-10 lg:flex-col lg:py-4 items-center grid grid-cols-3 lg:grid-cols-1 lg:grid-rows-3">
-      <div className="logo flex space-x-5  lg:w-full lg:justify-evenly ">
+    <div className={`${style.footerMobile} footer-wrapperinner max-h-[95px] lg:max-h-full 2xl:px-6 px-12 bg-[#1C1C1C]  mt-auto relative z-10 lg:flex-col lg:py-4 items-center grid grid-cols-3 lg:grid-cols-1 lg:grid-rows-3`}>
+      <div className={`${style.displayDesktop}`}>
         <img className=" " src={logo} alt="logo" />
       </div>
 
       <div className="copy-right-text copy-right-text-desktop text-center text-white sm:text-sm xs:text-xs lg:my-3 lg:row-start-3 lg:row-end-4 lg:mt-9 xl:text-sm lg:text-base">
         Copyright ©2023 Mystic Motors, All rights reserved.
       </div>
-      <div>
+      <div className={`${style.footerMobile}`} >
       <div className="social-icon flex lg:mt-[25px] justify-end items-center footer-icon-wrapper">
         <SocialLink img={discordIcon} link="https://Discord.gg/mysticmotors" />
         <SocialLink
@@ -34,13 +36,9 @@ export const Footer = () => {
           link="https://twitter.com/MysticMotorsNFT"
         />
       </div>
-      <div className="copy-right-text-mobile copy-right-text text-center text-white sm:text-sm xs:text-xs lg:my-3 lg:row-start-3 lg:row-end-4 lg:mt-3 xl:text-sm lg:text-base">
+      <div className={`${style.footerMobile} copy-right-text-mobile copy-right-text text-center text-white sm:text-sm xs:text-xs lg:my-3 lg:row-start-3 lg:row-end-4 lg:mt-3 xl:text-sm lg:text-base`}>
         Copyright ©2023 Mystic Motors, All rights reserved.
       </div>
-      </div>
-      <div className="collection-text-mobile copy-right-text text-center ">
-      <a href="#">PHASE 2<br></br>
-OLYMPUS COLLECTION</a>
       </div>
 
     </div>

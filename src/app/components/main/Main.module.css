@@ -27,12 +27,17 @@
     }
 }
 
-
 @media (max-aspect-ratio: 9/12) {
     .backgroundVideo {
         display: none;
     }
     .bg {
         display: block;
+    }
+    .displayDesktop {
+        display: none;
+    }
+    .footerMobile {
+        width: 100%;
     }
 }
