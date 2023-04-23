@@ -26,7 +26,7 @@ const fromWei = (num) => ethers.utils.formatEther(num)
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 
 const nameCollection = 'mystic-motors-olympus'
-const max_supply = 4000
+const max_supply = 750
 
 export const Roulette = ({mintEnabled, setIsSoldOut, isSoldOut}) => {
   const [arr, setArr] = useState([]);
