@@ -5,7 +5,7 @@ import style from "./Main.module.css";
 import { Timer } from "./Timer"
 
 export const Main = ({mintEnabled}) => {
-  const [isSoldOut, setIsSoldOut] = useState(false); // set to true when soldout
+  const [isSoldOut, setIsSoldOut] = useState(true); // set to true when soldout
 
   return (
     <main className={`flex h-full flex-1 bg-black relative`}>
